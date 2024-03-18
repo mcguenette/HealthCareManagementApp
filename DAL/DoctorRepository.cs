@@ -39,9 +39,9 @@ namespace DAL
 
             if (docToBeUpdated != null)
             {
-                docToBeUpdated.DoctorName = docToBeUpdated.DoctorName;
-                docToBeUpdated.DoctorEmail = docToBeUpdated.DoctorEmail;
-                docToBeUpdated.DoctorSpecialization = docToBeUpdated.DoctorSpecialization;
+                docToBeUpdated.DoctorName = doctorFormData.DoctorName;
+                docToBeUpdated.DoctorEmail = doctorFormData.DoctorEmail;
+                docToBeUpdated.DoctorSpecialization = doctorFormData.DoctorSpecialization;
 
                 pbc.SaveChanges();
                 return "success";
