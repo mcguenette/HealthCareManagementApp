@@ -1,5 +1,10 @@
 ﻿using ENTITIES.Context;
 using ENTITIES.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace DAL
 {
@@ -33,7 +38,10 @@ namespace DAL
 
             if (pacToBeUpdated != null)
             {
-                pacToBeUpdated.BookingDate = bookingFormData.BookingDate;
+                pacToBeUpdated.PatientID = bookingFormData.PatientID;
+                pacToBeUpdated.DoctorID = bookingFormData.DoctorID;
+                pacToBeUpdated.AvailabilityTime = bookingFormData.AvailabilityTime;
+                pacToBeUpdated.AvailabilityDate = bookingFormData.AvailabilityDate;
 
                 //Mapper.Map(pac, pacToBeUpdated); Using automapper is only one line
                 pbc.SaveChanges();
