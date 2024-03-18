@@ -3,3 +3,346 @@
 *@
 @{
 }
+<center><h2>Bookings</h2></center>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        loadData();
+        $('#alertSuccess').hide();
+        $('#alertDanger').hide();
+        $('#spinner').hide();
+    });
+
+    function loadData() {
+        $.ajax({
+            url: '/Booking/GetBookings',
+            type: "GET",
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function (response) {
+                var html = '';
+                $.each(response, function (key, item) {
+                    html += '<tr>'
+                    html += '<td>' + item.patientName + '</td>';
+                    html += '<td>' + item.doctorName + '</td>';
+                    // html += '<td>' + item.bookingTime + '</td>';
+                    // html += '<td>' + item.bookingDate + '</td>';
+                    var availabilityTime = new Date(item.availabilityTime);
+                    var availabilityDate = new Date(item.availabilityDate);
+                    var formatTime = availabilityTime.toLocaleDateString();
+                    var formatDate = availabilityDate.toLocaleDateString();
+                    html += '<td>' + formatTime + '</td>';
+                    html += '<td>' + formatDate + '</td>';
+                    html += '<td><a href="#" onclick="return getBookingByID(' + item.bookingID + ')">Edit</a> |<a href="#" onClick="Delete(' + item.bookingID + ')">Delete</a></td>';
+                    html += '</tr>'
+                });
+                $('.tbody').html(html);
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function RegisterBooking() {
+        $('#alertSuccess').hide();
+        $('#alertDanger').hide();
+
+        $('#spinner').show();
+        var bookingObj = {
+            PatientName: $('#patientName').val(),
+            DoctorName: $('#doctorName').val(),
+            AvailabilityTime: $('#availabilityTime').val(),
+            AvailabilityDate: $('#availabilityDate').val(),
+        };
+
+        $.ajax({
+            url: '/Booking/RegisterBooking',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(bookingObj),
+            success: function (response) {
+                if (response == 'success') {
+                    loadData();
+                    $('#spinner').hide();
+                    $('#alertSuccess').show();
+                    $('#alertSuccess').text('Patient has been successfully registered');
+                }
+                else {
+                    $('#spinner').hide();
+                    $('#alertDanger').show();
+                    $('#alertDanger').text('some error occured, try again!');
+                }
+            },
+            error: function (errormessage) {
+                $('#spinner').hide();
+                $('#alertDanger').show();
+                $('#alertDanger').text(errormessage.responseText);
+            }
+        });
+    }
+
+    function Update() {
+        $('#alertSuccess').hide();
+        $('#alertDanger').hide();
+        $('#spinner').hide();
+
+        var bookingObj = {
+            PatientName: $('#patientName').val(),
+            DoctorName: $('#doctorName').val(),
+            BookingTime: $('#availabilityTime').val(),
+            BookingDate: $('#availabilityDate').val(),
+        };
+        console.log(patObj);
+        console.log("Value-->" + $('#patID').val()); //no imprime ningun valor
+
+        $.ajax({
+            url: "/Booking/UpdateBooking/",
+            data: JSON.stringify(bookingObj),
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            success: function (response) {
+
+                if (response == 'success') {
+                    loadData();
+                    $('#myModal').modal('hide');
+                    $('.modal-backdrop').remove();
+                }
+                else {
+                    $('#errorMessage').text('Name and date are required!');
+                }
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        })
+    }
+
+
+    function Delete(bookingIDToDelete) {
+        $('#myModalDelete').modal('show');
+        $('.modal-backdrop').show();
+        $('#btnDelete').data('bookingtID', bookingIDToDelete);
+    }
+
+
+    function getBookingByID(bookID) {
+        $('#alertSuccess').hide();
+        $('#alertDanger').hide();
+        $('#spinner').hide();
+
+        $.ajax({
+            url: "/Booking/GetBookingByID/" + bookID, //Pass the parameter directly when is GET
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json",
+            success: function (response) {
+                $('#bookID').val(response.bookID);
+                $('#patientName').val(response.patientName);
+                $('#doctorName').val(response.doctorName
+                // $('#bookingTime').val(response.bookingTime);
+
+                var formatTime = new Date(response.availabilityTime); // Convert the string to a Date object
+                var formatDate = availabilityDate.toISOString().split('T')[0];// Format the date to display only the date (without the time)
+                $('#availabilityTime').val(formatTime);
+                $('#availabilityDate').val(formatDate);
+
+                $('#myModal').modal('show');
+                $('#btnUpdate').show();
+
+                $('#btnAdd').hide();
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        })
+    }
+
+    function DeleteBooking() {
+        var bookID = $('#btnDelete').data('bookingID');
+        $.ajax({
+            url: "/Booking/DeleteBooking/",
+            data: JSON.stringify(bookID),
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            success: function (response) {
+                if (response == 'success') {
+                    $('#myModalDelete').modal('hide');
+                    $('.modal-backdrop').remove();
+                    loadData();
+                }
+                else {
+                    $('#spinner').hide();
+                    $('#alertDanger').show();
+                    $('#alertDanger').text('some error occured, try again!');
+                }
+            },
+            error: function (errormessage) {
+                if (errormessage.status == 401)
+                    alert('You are not authorized!');
+            }
+        });
+    }
+
+    function CloseDeleteModal() {
+        $('#myModalDelete').modal('hide');
+        $('.modal-backdrop').remove();
+    }
+
+    function clearTextBoxes() {
+        $('#patientName').val("");
+        $('#doctorName').val("");
+        $('#bookingTime').val("");
+        $('#bookingDate').val("");
+
+        $('#btnUpdate').hide();
+        $('#alertSuccess').hide();
+        $('#alertDanger').hide()
+        $('#btnAdd').show();
+    }
+</script>
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" onclick="clearTextBoxes();">Add New Patient</button>
+@*<p style="color:red" id="errorMessage"></p>*@
+
+<br />
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <td><center>Patient's Name</center></td>
+            <td><center>Doctor's Name</center></td>
+            <td><center>Booking Time</center></td>
+            <td><center>Booking Date</center></td>
+            <td><center>Action</center></td>
+        </tr>
+    </thead>
+    <tbody class="tbody">
+        @*Patients records will be populated here*@
+    </tbody>
+</table>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4>Patient</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form>
+
+                    <input type="hidden" id="bookingID" />
+
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="bookingTime">Patient Name</label>
+                                <input type="text" class="form-control" id="patientName"/>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="doctorName">Select a Doctor</label>
+
+                                <select name="doctors" id="doctorName" class="form-control">
+                                    <option value="">--Please choose an option--</option>
+                                    <option value=""></option>
+                                    <option value=""></option>
+                                    <option value=""></option>
+                                    <option value=""></option>
+                                    <option value=""></option>
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                            <label for="bookingTime">Select an available time</label>
+                                <input type="datetime-local" class="form-control" id="availabilityTime" />
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="bookingTime">Select an available date</label>
+                                <input type="date" class="form-control" id="availabilityDate" />
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <button type="button" class="btn btn-primary" id="btnAdd" onclick="RegisterBooking();">Register</button>
+                                <button type="button" class="btn btn-primary" id="btnUpdate" onclick="return Update();">Update</button>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="alert alert-success" id="alertSuccess"></div>
+                            <div class="alert alert-danger" id="alertDanger"></div>
+
+                        </div>
+                    </div>
+                </form>
+
+                <center>
+                    <div class="spinner-border" role="status" id="spinner">
+                    </div>
+                </center>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModalDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h4 class="modal-title">Delete Patient</h4>
+
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form>
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <p>Are you sure want to delete this Patient?</p>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-outline-primary" id="btnDelete" onClick="DeleteBooking()">Delete</button>
+                                <button type="button" class="btn btn-outline-secondary" id="btnCloseModalDelete" onclick="return CloseDeleteModal()">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <p style="color:red" id="errorMessage"></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
