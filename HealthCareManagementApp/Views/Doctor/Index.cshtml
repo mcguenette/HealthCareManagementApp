@@ -44,7 +44,7 @@
         $('#spinner').show();
         var doctorObj = {
             DoctorName: $('#doctorName').val(),
-            Email: $('#doctorEmail').val(),
+            DoctorEmail: $('#doctorEmail').val(),
             DoctorSpecialization: $('#doctorSpecialization').val()
         };
 
@@ -83,11 +83,9 @@
         var docObj = {
             DoctorID: $('#docID').val(),
             DoctorName: $('#doctorName').val(),
-            Email: $('#doctorEmail').val(),
+            DoctorEmail: $('#doctorEmail').val(),
             DoctorSpecialization: $('#doctorSpecialization').val()
         }
-        console.log(docObj);
-        console.log("Value-->" + $('#docID').val()); //no imprime ningun valor
 
         $.ajax({
             url: "/Doctor/UpdateDoctor/",
@@ -113,13 +111,6 @@
     }
 
 
-    function Delete(DoctorIDToDelete) {
-        $('#myModalDelete').modal('show');
-        $('.modal-backdrop').show();
-        $('#btnDelete').data('DocID', DoctorIDToDelete);
-    }
-
-
     function getDoctorByID(docID) {
         $('#alertSuccess').hide();
         $('#alertDanger').hide();
@@ -131,10 +122,10 @@
             contentType: "application/json",
             dataType: "json",
             success: function (response) {
-                $('#docID').val(response.DoctorID);
-                $('#doctorName').val(response.DoctorName);
-                $('#doctorEmail').val(response.DoctorEmail);
-                $('#doctorSpecialization').val(response.DoctorSpecialization);
+                $('#docID').val(response.doctorID);
+                $('#doctorName').val(response.doctorName);
+                $('#doctorEmail').val(response.doctorEmail);
+                $('#doctorSpecialization').val(response.doctorSpecialization);
 
                 $('#myModal').modal('show');
                 $('#btnUpdate').show();
@@ -147,8 +138,15 @@
         })
     }
 
+    function Delete(DoctorIDToDelete) {
+        $('#myModalDelete').modal('show');
+        $('.modal-backdrop').show();
+        $('#btnDelete').data('DoctorID', DoctorIDToDelete);
+    }
+
     function DeleteDoctor() {
-        var patID = $('#btnDelete').data('DoctorID');
+        var docID = $('#btnDelete').data('DoctorID');
+       
         $.ajax({
             url: "/Doctor/DeleteDoctor/",
             data: JSON.stringify(docID),
