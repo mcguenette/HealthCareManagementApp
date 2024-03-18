@@ -1,5 +1,308 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿
+<center><h2>Doctors</h2></center>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        loadData();
+        $('#alertSuccess').hide();
+        $('#alertDanger').hide();
+        $('#spinner').hide();
+    });
+
+    function loadData() {
+        $.ajax({
+            url: '/Doctor/GetDoctors',
+            type: "GET",
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function (response) {
+                var html = '';
+                $.each(response, function (key, item) {
+                    html += '<tr>'
+                    html += '<td>' + item.doctorName + '</td>';
+                    html += '<td>' + item.doctorEmail + '</td>';
+                    html += '<td>' + item.doctorSpecialization + '</td>';
+                    html += '<td><a href="#" onclick="return getDoctorByID(' + item.doctorID + ')">Edit</a> |<a href="#" onClick="Delete(' + item.doctorID + ')">Delete</a></td>';
+                    html += '</tr>'
+                });
+                $('.tbody').html(html);
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function RegisterDoctor() {
+        $('#alertSuccess').hide();
+        $('#alertDanger').hide();
+
+        $('#spinner').show();
+        var doctorObj = {
+            DoctorName: $('#doctorName').val(),
+            Email: $('#doctorEmail').val(),
+            DoctorSpecialization: $('#doctorSpecialization').val()
+        };
+
+        console.log("Object ->" + doctorObj);
+        $.ajax({
+            url: '/Doctor/RegisterDoctor',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(doctorObj),
+            success: function (response) {
+                if (response == 'success') {
+                    loadData();
+                    $('#spinner').hide();
+                    $('#alertSuccess').show();
+                    $('#alertSuccess').text('Doctor has been successfully registered');
+                }
+                else {
+                    $('#spinner').hide();
+                    $('#alertDanger').show();
+                    $('#alertDanger').text('some error occured, try again!');
+                }
+            },
+            error: function (errormessage) {
+                $('#spinner').hide();
+                $('#alertDanger').show();
+                $('#alertDanger').text(errormessage.responseText);
+            }
+        });
+    }
+
+    function Update() {
+        $('#alertSuccess').hide();
+        $('#alertDanger').hide();
+        $('#spinner').hide();
+
+        var docObj = {
+            DoctorID: $('#docID').val(),
+            DoctorName: $('#doctorName').val(),
+            Email: $('#doctorEmail').val(),
+            DoctorSpecialization: $('#doctorSpecialization').val()
+        }
+        console.log(docObj);
+        console.log("Value-->" + $('#docID').val()); //no imprime ningun valor
+
+        $.ajax({
+            url: "/Doctor/UpdateDoctor/",
+            data: JSON.stringify(docObj),
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            success: function (response) {
+
+                if (response == 'success') {
+                    loadData();
+                    $('#myModal').modal('hide');
+                    $('.modal-backdrop').remove();
+                }
+                else {
+                    $('#errorMessage').text('Name, email, specialization are required!');
+                }
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        })
+    }
+
+
+    function Delete(DoctorIDToDelete) {
+        $('#myModalDelete').modal('show');
+        $('.modal-backdrop').show();
+        $('#btnDelete').data('DoctorID', DoctorIDToDelete);
+    }
+
+
+    function getDoctorByID(patID) {
+        $('#alertSuccess').hide();
+        $('#alertDanger').hide();
+        $('#spinner').hide();
+
+        $.ajax({
+            url: "/Doctor/GetDoctorByID/" + docID, //Pass the parameter directly when is GET
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json",
+            success: function (response) {
+                $('#docID').val(response.DoctorID);
+                $('#doctorName').val(response.DoctorName);
+                $('#doctorEmail').val(response.email);
+                $('#doctorSpecialization').val(response.DoctorSpecialization);
+
+                $('#myModal').modal('show');
+                $('#btnUpdate').show();
+
+                $('#btnAdd').hide();
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        })
+    }
+
+    function DeleteDoctor() {
+        var patID = $('#btnDelete').data('DoctorID');
+        $.ajax({
+            url: "/Doctor/DeleteDoctor/",
+            data: JSON.stringify(docID),
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            success: function (response) {
+                if (response == 'success') {
+                    $('#myModalDelete').modal('hide');
+                    $('.modal-backdrop').remove();
+                    loadData();
+                }
+                else {
+                    $('#spinner').hide();
+                    $('#alertDanger').show();
+                    $('#alertDanger').text('some error occured, try again!');
+                }
+            },
+            error: function (errormessage) {
+                if (errormessage.status == 401)
+                    alert('You are not authorized!');
+            }
+        });
+    }
+
+    function CloseDeleteModal() {
+        $('#myModalDelete').modal('hide');
+        $('.modal-backdrop').remove();
+    }
+
+    function clearTextBoxes() {
+        $('#doctorName').val("");
+        $('#doctorEmail').val("");
+        $('#doctorSpecialization').val("");
+
+        $('#btnUpdate').hide();
+        $('#alertSuccess').hide();
+        $('#alertDanger').hide()
+        $('#btnAdd').show();
+    }
+</script>
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" onclick="clearTextBoxes();">Add New Doctor</button>
+@*<p style="color:red" id="errorMessage"></p>*@
+
+<br />
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <td><center>Full Name</center></td>
+            <td><center>Email</center></td>
+            <td><center>Specialization</center></td>
+            <td><center>Action</center></td>
+        </tr>
+    </thead>
+    <tbody class="tbody">
+        @*Doctors records will be populated here*@
+    </tbody>
+</table>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4>Doctor</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form>
+
+                    <input type="hidden" id="docID" />
+
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="doctorName" placeholder="Doctor Name" />
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="email" class="form-control" id="doctorEmail" placeholder="Email" />
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="doctorSpecialization" placeholder="Specialization" />
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <button type="button" class="btn btn-primary" id="btnAdd" onclick="RegisterDoctor();">Register</button>
+                                <button type="button" class="btn btn-primary" id="btnUpdate" onclick="return Update();">Update</button>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="alert alert-success" id="alertSuccess"></div>
+                            <div class="alert alert-danger" id="alertDanger"></div>
+
+                        </div>
+                    </div>
+                </form>
+
+                <center>
+                    <div class="spinner-border" role="status" id="spinner">
+                    </div>
+                </center>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModalDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h4 class="modal-title">Delete Doctor</h4>
+
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form>
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <p>Are you sure want to delete this Doctor?</p>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-outline-primary" id="btnDelete" onClick="DeleteDoctor()">Delete</button>
+                                <button type="button" class="btn btn-outline-secondary" id="btnCloseModalDelete" onclick="return CloseDeleteModal()">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <p style="color:red" id="errorMessage"></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
