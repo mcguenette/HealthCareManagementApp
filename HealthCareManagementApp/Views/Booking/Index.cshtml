@@ -206,9 +206,33 @@
         $('#alertDanger').hide()
         $('#btnAdd').show();
     }
+
+    function fetchAvailableTimes() {
+        var selectedDoctor = $('#doctorName').val();
+
+        $.ajax({
+            url: '/Booking/GetAvailableTimes?doctor=' + selectedDoctor,
+            type: 'GET',
+            success: function (response) {
+                updateAvailableTimesDropdown(response);
+            },
+            error: function (errormessage) {
+                console.log(errormessage.responseText);
+            }
+        });
+    }
+
+    function updateAvailableTimesDropdown(times) {
+        var dropdown = $('#availabilityTime');
+        dropdown.empty();
+
+        $.each(times, function (key, value) {
+            dropdown.append($('<option></option>').attr('value', value).text(value));
+        });
+    }
 </script>
 
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" onclick="clearTextBoxes();">Add New Patient</button>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" onclick="clearTextBoxes();">Book an appointment</button>
 @*<p style="color:red" id="errorMessage"></p>*@
 
 <br />
@@ -255,16 +279,19 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="doctorName">Select a Doctor</label>
-
-                                <select name="doctors" id="doctorName" class="form-control">
+                                <select name="doctors" id="doctorName" class="form-control" onchange="fetchAvailableTimes()">
                                     <option value="">--Please choose an option--</option>
-                                    <option value=""></option>
-                                    <option value=""></option>
-                                    <option value=""></option>
-                                    <option value=""></option>
-                                    <option value=""></option>
-                                    <option value=""></option>
                                 </select>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="bookingTime">Select an available date</label>
+                                <input type="checkbox" class="form-control" id="availabilityDate" />
                             </div>
                         </div>
                     </div>
@@ -275,16 +302,6 @@
                             <div class="form-group">
                             <label for="bookingTime">Select an available time</label>
                                 <input type="datetime-local" class="form-control" id="availabilityTime" />
-                            </div>
-                        </div>
-                    </div>
-                    <br />
-
-                    <div class="row justify-content-center">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="bookingTime">Select an available date</label>
-                                <input type="date" class="form-control" id="availabilityDate" />
                             </div>
                         </div>
                     </div>

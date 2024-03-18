@@ -26,39 +26,29 @@ namespace ENTITIES.Context
                 optionsBuilder.UseSqlServer(@"Server=.;Database=HealthCareManagement;Trusted_Connection=True;TrustServerCertificate=True;");
             }
         }
-
-        public DbSet<Patient> Patients { get; set; }
-        public DbSet<Availability> Availabilities { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Doctor> Doctors { get; set; }
+        public DbSet<Patient> Patients { get; set; }
+        public DbSet<Availability> Availabilities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-
             modelBuilder.Entity<Booking>()
                 .HasOne(b => b.Patient)
                 .WithMany(p => p.Bookings)
                 .HasForeignKey(b => b.PatientID)
-                .OnDelete(DeleteBehavior.Restrict); // Specify the desired delete behavior
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Booking>()
                 .HasOne(b => b.Doctor)
                 .WithMany(d => d.Bookings)
-                .HasForeignKey(b => b.DoctorID)
-                .OnDelete(DeleteBehavior.Restrict); // Specify the desired delete behavior
+                .OnDelete(DeleteBehavior.NoAction);// Configure Doctor relationship without cascade behavior
 
             modelBuilder.Entity<Booking>()
                 .HasOne(b => b.Availability)
-                .WithMany(a => a.Bookings)
-                .HasForeignKey(b => b.AvailabilityID)
-                .OnDelete(DeleteBehavior.Restrict); // Specify the desired delete behavior
-
-            modelBuilder.Entity<Availability>()
-                .HasOne(a => a.Doctor)
-                .WithMany(d => d.Availabilities)
-                .HasForeignKey(a => a.DoctorID)
-                .OnDelete(DeleteBehavior.Restrict); // Specify the desired delete behavior
+                .WithMany(a => a.Bookings) // Configure Availability relationship without cascade behavior
+                .OnDelete(DeleteBehavior.NoAction);
+            base.OnModelCreating(modelBuilder);
         }
 
     }

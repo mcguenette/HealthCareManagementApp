@@ -15,16 +15,11 @@ namespace ENTITIES.Entities
 
         [ForeignKey("Patient")]
         public int PatientID { get; set; }
-        public virtual Patient Patient { get; set; } // Navigation property for Patient
+        public virtual Patient Patient { get; set; }
 
-        [ForeignKey("Doctor")]
-        public int DoctorID { get; set; }
-        public virtual Doctor Doctor { get; set; } // Navigation property for Doctor
+        // Remove the ForeignKey attribute for Doctor and Availability
+        public virtual Doctor Doctor { get; set; }
+        public virtual Availability Availability { get; set; }
 
-        [ForeignKey("Availability")]
-        public int AvailabilityID { get; set; }
-        public virtual Availability Availability { get; set; } // Navigation property for Availability
-
-        
     }
 }

@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ENTITIES.Migrations
 {
     /// <inheritdoc />
-    public partial class HCEFCore1 : Migration
+    public partial class UpdateEntities2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Doctor",
+                name: "Doctors",
                 columns: table => new
                 {
                     DoctorID = table.Column<int>(type: "int", nullable: false)
@@ -23,7 +23,7 @@ namespace ENTITIES.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Doctor", x => x.DoctorID);
+                    table.PrimaryKey("PK_Doctors", x => x.DoctorID);
                 });
 
             migrationBuilder.CreateTable(
@@ -49,17 +49,18 @@ namespace ENTITIES.Migrations
                     AvailabilityID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DoctorID = table.Column<int>(type: "int", nullable: false),
-                    AvailabilityTime = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    AvailabilityDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AvailabilityTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Availabilities", x => x.AvailabilityID);
                     table.ForeignKey(
-                        name: "FK_Availabilities_Doctor_DoctorID",
+                        name: "FK_Availabilities_Doctors_DoctorID",
                         column: x => x.DoctorID,
-                        principalTable: "Doctor",
+                        principalTable: "Doctors",
                         principalColumn: "DoctorID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -70,8 +71,7 @@ namespace ENTITIES.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PatientID = table.Column<int>(type: "int", nullable: false),
                     DoctorID = table.Column<int>(type: "int", nullable: false),
-                    AvailabilityID = table.Column<int>(type: "int", nullable: false),
-                    BookingDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    AvailabilityID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -80,20 +80,17 @@ namespace ENTITIES.Migrations
                         name: "FK_Bookings_Availabilities_AvailabilityID",
                         column: x => x.AvailabilityID,
                         principalTable: "Availabilities",
-                        principalColumn: "AvailabilityID",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "AvailabilityID");
                     table.ForeignKey(
-                        name: "FK_Bookings_Doctor_DoctorID",
+                        name: "FK_Bookings_Doctors_DoctorID",
                         column: x => x.DoctorID,
-                        principalTable: "Doctor",
-                        principalColumn: "DoctorID",
-                        onDelete: ReferentialAction.Restrict);
+                        principalTable: "Doctors",
+                        principalColumn: "DoctorID");
                     table.ForeignKey(
                         name: "FK_Bookings_Patients_PatientID",
                         column: x => x.PatientID,
                         principalTable: "Patients",
-                        principalColumn: "PatientID",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "PatientID");
                 });
 
             migrationBuilder.CreateIndex(
@@ -130,7 +127,7 @@ namespace ENTITIES.Migrations
                 name: "Patients");
 
             migrationBuilder.DropTable(
-                name: "Doctor");
+                name: "Doctors");
         }
     }
 }
