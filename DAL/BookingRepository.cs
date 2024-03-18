@@ -12,7 +12,7 @@ namespace DAL
     {
         PatientBookingContext pbc = new PatientBookingContext();
 
-        public List<Booking> GetAllBookingRepo()
+        public List<Booking> GetAllBookingsRepo()
         {
             return pbc.Bookings.ToList();
         }
@@ -50,21 +50,21 @@ namespace DAL
             return "error";
         }
 
-        public string DeletePatientRepo(int patID)
+        public string DeleteBookingRepo(int bookID)
         {
             var response = "";
             try
             {
-                Patient pacToBeDeleted = pbc.Patients.FirstOrDefault(x => x.PatientID == patID);
+                Booking pacToBeDeleted = pbc.Bookings.FirstOrDefault(x => x.BookingID == bookID);
                 if (pacToBeDeleted != null)
                 {
-                    pbc.Patients.Remove(pacToBeDeleted);
+                    pbc.Bookings.Remove(pacToBeDeleted);
                     pbc.SaveChanges();
                     response = "success";
                 }
                 else
                 {
-                    response = "error: Patient not found";
+                    response = "error: Booking not found";
                 }
             }
             catch (Exception ex)
