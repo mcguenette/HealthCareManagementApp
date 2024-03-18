@@ -73,5 +73,24 @@ namespace DAL
             }
             return response;
         }
+        public List<string> GetAvailableTimes(string doctor)
+        {
+            try
+            {
+                // Example implementation - Replace with actual database query
+                List<Availability> availabilities = pbc.Availabilities
+                    .Where(a => a.DoctorName == doctor)
+                    .ToList();
+
+                // Convert the list of Availability objects to a list of string (available times)
+                List<string> availableTimes = availabilities.Select(a => a.AvailableTime.ToString("HH:mm")).ToList();
+
+                return availableTimes;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error fetching available times: " + ex.Message);
+            }
+        }
     }
 }

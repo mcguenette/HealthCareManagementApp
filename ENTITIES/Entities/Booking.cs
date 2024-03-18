@@ -21,10 +21,12 @@ namespace ENTITIES.Entities
         public int DoctorID { get; set; }
         public virtual Doctor Doctor { get; set; } // Navigation property for Doctor
 
+        // Remove the ForeignKey attribute for AvailabilityID
+        // Remove the AvailabilityID property since it's not needed here
+
         [ForeignKey("Availability")]
         public int AvailabilityID { get; set; }
-        public virtual Availability Availability { get; set; } // Navigation property for Availability
+        public virtual Availability Availability { get; set; }
 
-        
     }
 }

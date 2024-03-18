@@ -26,40 +26,27 @@ namespace ENTITIES.Context
                 optionsBuilder.UseSqlServer(@"Server=.;Database=HealthCareManagement;Trusted_Connection=True;TrustServerCertificate=True;");
             }
         }
-
-        public DbSet<Patient> Patients { get; set; }
-        public DbSet<Availability> Availabilities { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Doctor> Doctors { get; set; }
+        public DbSet<Patient> Patients { get; set; }
+        public DbSet<Availability> Availabilities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-
             modelBuilder.Entity<Booking>()
                 .HasOne(b => b.Patient)
                 .WithMany(p => p.Bookings)
-                .HasForeignKey(b => b.PatientID)
-                .OnDelete(DeleteBehavior.Restrict); // Specify the desired delete behavior
+                .HasForeignKey(b => b.PatientID);
 
             modelBuilder.Entity<Booking>()
                 .HasOne(b => b.Doctor)
-                .WithMany(d => d.Bookings)
-                .HasForeignKey(b => b.DoctorID)
-                .OnDelete(DeleteBehavior.Restrict); // Specify the desired delete behavior
-
-            modelBuilder.Entity<Booking>()
-                .HasOne(b => b.Availability)
-                .WithMany(a => a.Bookings)
-                .HasForeignKey(b => b.AvailabilityID)
-                .OnDelete(DeleteBehavior.Restrict); // Specify the desired delete behavior
+                .WithMany()
+                .HasForeignKey(b => b.DoctorID);
 
             modelBuilder.Entity<Availability>()
                 .HasOne(a => a.Doctor)
                 .WithMany(d => d.Availabilities)
-                .HasForeignKey(a => a.DoctorID)
-                .OnDelete(DeleteBehavior.Restrict); // Specify the desired delete behavior
+                .HasForeignKey(a => a.DoctorID);
         }
-
     }
 }

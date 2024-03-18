@@ -21,10 +21,7 @@ namespace ENTITIES.Entities
         [MaxLength(50)]
         public string DoctorSpecialization { get; set; }
 
-        // multiple booking with one Doctor - Navigation Property
+        // Navigation property for Bookings
         public ICollection<Booking> Bookings { get; set; }
-
-        // multiple Availability with one doctor - Navigation Property
-        public ICollection<Availability> Availabilities { get; set; }
     }
 }
