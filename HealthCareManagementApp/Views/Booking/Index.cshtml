@@ -147,9 +147,9 @@
                 $('#doctorName').val(response.doctorName
                 // $('#bookingTime').val(response.bookingTime);
 
-                var formatTime = new Date(response.bookingTime); // Convert the string to a Date object
-                var formatDate = bookingDate.toISOString().split('T')[0];// Format the date to display only the date (without the time)
-                $('#availabilityTime').val(formatDate);
+                var formatTime = new Date(response.availabilityTime); // Convert the string to a Date object
+                var formatDate = availabilityDate.toISOString().split('T')[0];// Format the date to display only the date (without the time)
+                $('#availabilityTime').val(formatTime);
                 $('#availabilityDate').val(formatDate);
 
                 $('#myModal').modal('show');
@@ -334,7 +334,7 @@
                         <div class="col-md-6">
                             <p>Are you sure want to delete this Patient?</p>
                             <div class="form-group">
-                                <button type="button" class="btn btn-outline-primary" id="btnDelete" onClick="DeletePatient()">Delete</button>
+                                <button type="button" class="btn btn-outline-primary" id="btnDelete" onClick="DeleteBooking()">Delete</button>
                                 <button type="button" class="btn btn-outline-secondary" id="btnCloseModalDelete" onclick="return CloseDeleteModal()">Cancel</button>
                             </div>
                         </div>
