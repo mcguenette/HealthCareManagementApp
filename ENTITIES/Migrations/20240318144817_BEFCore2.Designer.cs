@@ -4,6 +4,7 @@ using ENTITIES.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ENTITIES.Migrations
 {
     [DbContext(typeof(PatientBookingContext))]
-    partial class PatientBookingContextModelSnapshot : ModelSnapshot
+    [Migration("20240318144817_BEFCore2")]
+    partial class BEFCore2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -100,7 +103,7 @@ namespace ENTITIES.Migrations
 
                     b.HasKey("DoctorID");
 
-                    b.ToTable("Doctors");
+                    b.ToTable("Doctor");
                 });
 
             modelBuilder.Entity("ENTITIES.Entities.Patient", b =>
