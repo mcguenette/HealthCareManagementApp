@@ -10,6 +10,10 @@ namespace ENTITIES.Context
 {
     public class PatientBookingContext : DbContext
     {
+        public PatientBookingContext() : base()
+        {
+
+        }
         public PatientBookingContext(DbContextOptions<PatientBookingContext> options) : base()
         {
 

@@ -1,0 +1,336 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<center><h2>Patients</h2></center>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        loadData();
+        $('#alertSuccess').hide();
+        $('#alertDanger').hide();
+        $('#spinner').hide();
+    });
+
+    function loadData() {
+        $.ajax({
+            url: '/Patient/GetPatients',
+            type: "GET",
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function (response) {
+                var html = '';
+                $.each(response, function(key, item) {
+                    html += '<tr>'
+                    html += '<td>' + item.patientName + '</td>';
+                    html += '<td>' + item.email + '</td>';
+                    html += '<td>' + item.phoneNumber + '</td>';
+                    var dobDate = new Date(item.dob);
+                    var formattedDate = dobDate.toLocaleDateString();
+                    html += '<td>' + formattedDate + '</td>';
+                    html += '<td><a href="#" onclick="return getPatientByID(' + item.patientID + ')">Edit</a> |<a href="#" onClick="Delete(' + item.patientID + ')">Delete</a></td>';
+                    html += '</tr>'
+                });
+                $('.tbody').html(html);
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function RegisterPatient() {
+        $('#alertSuccess').hide();
+        $('#alertDanger').hide();
+
+        $('#spinner').show();
+        var patientObj = {
+            PatientName: $('#patientName').val(),
+            Email: $('#email').val(),
+            PhoneNumber: $('#phoneNumber').val(),
+            DOB: $('#dateOfBirth').val(),
+        };
+
+        $.ajax({
+            url: '/Patient/RegisterPatient',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(patientObj),
+            success: function (response) {
+                if (response == 'success') {
+                    loadData();
+                    $('#spinner').hide();
+                    $('#alertSuccess').show();
+                    $('#alertSuccess').text('Patient has been successfully registered');
+                }
+                else {
+                    $('#spinner').hide();
+                    $('#alertDanger').show();
+                    $('#alertDanger').text('some error occured, try again!');
+                }
+            },
+            error: function (errormessage) {
+                $('#spinner').hide();
+                $('#alertDanger').show();
+                $('#alertDanger').text(errormessage.responseText);
+            }
+        });
+    }
+
+    function Update() {
+        $('#alertSuccess').hide();
+        $('#alertDanger').hide();
+        $('#spinner').hide();
+
+        var patObj = {
+            patientID: $('#patID').val(),
+            PatientName: $('#patientName').val(),
+            Email: $('#email').val(),
+            PhoneNumber: $('#phoneNumber').val(),
+            DOB: $('#dateOfBirth').val()
+        }
+        console.log(patObj);
+        console.log("Value-->" + $('#patID').val()); //no imprime ningun valor
+
+        $.ajax({
+            url: "/Patient/UpdatePatient/",
+            data: JSON.stringify(patObj),
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            success: function (response) {
+
+                if (response == 'success') {
+                    loadData();
+                    $('#myModal').modal('hide');
+                    $('.modal-backdrop').remove();
+                }
+                else {
+                    $('#errorMessage').text('Name, email, phone number and date of birth are required!');
+                }
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        })
+    }
+
+
+    function Delete(patientIDToDelete) {
+        $('#myModalDelete').modal('show');
+        $('.modal-backdrop').show();
+        $('#btnDelete').data('patientID', patientIDToDelete);
+    }
+
+
+    function getPatientByID(patID) {
+        $('#alertSuccess').hide();
+        $('#alertDanger').hide();
+        $('#spinner').hide();
+
+        $.ajax({
+            url: "/Patient/GetPatientByID/" + patID, //Pass the parameter directly when is GET
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json",
+            success: function (response) {
+                $('#patID').val(response.patientID);
+                $('#patientName').val(response.patientName);
+                $('#email').val(response.email);
+                $('#phoneNumber').val(response.phoneNumber);
+
+                var dateOfBirth = new Date(response.dob); // Convert the string to a Date object
+                var formattedDate = dateOfBirth.toISOString().split('T')[0];// Format the date to display only the date (without the time)
+                $('#dateOfBirth').val(formattedDate);
+
+                $('#myModal').modal('show');
+                $('#btnUpdate').show();
+
+                $('#btnAdd').hide();
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        })
+    }
+
+    function DeletePatient() {
+        var patID = $('#btnDelete').data('patientID');
+        $.ajax({
+            url: "/Patient/DeletePatient/",
+            data: JSON.stringify(patID),
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            success: function (response) {
+                if (response == 'success') {
+                    $('#myModalDelete').modal('hide');
+                    $('.modal-backdrop').remove();
+                    loadData();
+                }
+                else {
+                    $('#spinner').hide();
+                    $('#alertDanger').show();
+                    $('#alertDanger').text('some error occured, try again!');
+                }
+            },
+            error: function (errormessage) {
+                if (errormessage.status == 401)
+                    alert('You are not authorized!');
+            }
+        });
+    }
+
+    function CloseDeleteModal() {
+        $('#myModalDelete').modal('hide');
+        $('.modal-backdrop').remove();
+    }
+
+    function clearTextBoxes() {
+        $('#patientName').val("");
+        $('#email').val("");
+        $('#phoneNumber').val("");
+        $('#dateOfBirth').val("");
+
+        $('#btnUpdate').hide();
+        $('#alertSuccess').hide();
+        $('#alertDanger').hide()
+        $('#btnAdd').show();
+    }
+</script>
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" onclick="clearTextBoxes();">Add New Patient</button>
+@*<p style="color:red" id="errorMessage"></p>*@
+
+<br />
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <td><center>Full Name</center></td>
+            <td><center>Email</center></td>
+            <td><center>Phone Number</center></td>
+            <td><center>Date of Birth</center></td>
+            <td><center>Action</center></td>
+        </tr>
+    </thead>
+    <tbody class="tbody">
+        @*Patients records will be populated here*@
+    </tbody>
+</table>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4>Patient</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form>
+
+                    <input type="hidden" id="patID" />
+
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="patientName" placeholder="Patient Name" />
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="email" class="form-control" id="email" placeholder="Email" />
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="phoneNumber" placeholder="Phone Number" />
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="date" class="form-control" id="dateOfBirth" />
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <button type="button" class="btn btn-primary" id="btnAdd" onclick="RegisterPatient();">Register</button>
+                                <button type="button" class="btn btn-primary" id="btnUpdate" onclick="return Update();">Update</button>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="alert alert-success" id="alertSuccess"></div>
+                            <div class="alert alert-danger" id="alertDanger"></div>
+
+                        </div>
+                    </div>
+                </form>
+
+                <center>
+                    <div class="spinner-border" role="status" id="spinner">
+                    </div>
+                </center>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModalDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h4 class="modal-title">Delete Patient</h4>
+
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form>
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <p>Are you sure want to delete this Patient?</p>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-outline-primary" id="btnDelete" onClick="DeletePatient()">Delete</button>
+                                <button type="button" class="btn btn-outline-secondary" id="btnCloseModalDelete" onclick="return CloseDeleteModal()">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <p style="color:red" id="errorMessage"></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
