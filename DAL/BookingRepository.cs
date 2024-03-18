@@ -40,8 +40,8 @@ namespace DAL
             {
                 pacToBeUpdated.PatientID = bookingFormData.PatientID;
                 pacToBeUpdated.DoctorID = bookingFormData.DoctorID;
-                pacToBeUpdated.AvailabilityTime = bookingFormData.AvailabilityTime;
-                pacToBeUpdated.AvailabilityDate = bookingFormData.AvailabilityDate;
+                //pacToBeUpdated.AvailabilityTime = bookingFormData.AvailabilityTime;
+                //pacToBeUpdated.AvailabilityDate = bookingFormData.AvailabilityDate;
 
                 //Mapper.Map(pac, pacToBeUpdated); Using automapper is only one line
                 pbc.SaveChanges();
