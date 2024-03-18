@@ -116,11 +116,11 @@
     function Delete(DoctorIDToDelete) {
         $('#myModalDelete').modal('show');
         $('.modal-backdrop').show();
-        $('#btnDelete').data('DoctorID', DoctorIDToDelete);
+        $('#btnDelete').data('DocID', DoctorIDToDelete);
     }
 
 
-    function getDoctorByID(patID) {
+    function getDoctorByID(docID) {
         $('#alertSuccess').hide();
         $('#alertDanger').hide();
         $('#spinner').hide();
@@ -133,7 +133,7 @@
             success: function (response) {
                 $('#docID').val(response.DoctorID);
                 $('#doctorName').val(response.DoctorName);
-                $('#doctorEmail').val(response.email);
+                $('#doctorEmail').val(response.DoctorEmail);
                 $('#doctorSpecialization').val(response.DoctorSpecialization);
 
                 $('#myModal').modal('show');

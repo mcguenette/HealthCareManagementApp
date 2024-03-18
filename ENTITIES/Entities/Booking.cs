@@ -25,6 +25,6 @@ namespace ENTITIES.Entities
         public int AvailabilityID { get; set; }
         public virtual Availability Availability { get; set; } // Navigation property for Availability
 
-        public DateTime BookingDate { get; set; }
+        
     }
 }

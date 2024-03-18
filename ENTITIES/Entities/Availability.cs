@@ -17,7 +17,9 @@ namespace ENTITIES.Entities
         public int DoctorID { get; set; }
         public virtual Doctor Doctor { get; set; } // Navigation property for Doctor
 
-        public string AvailabilityTime { get; set; }
+        public DateTime AvailabilityDate { get; set; }
+
+        public DateTime AvailabilityTime { get; set; }
 
         // Navigation property for Bookings
         public virtual ICollection<Booking> Bookings { get; set; }
