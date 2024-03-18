@@ -1,11 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-@* 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div> *@
+
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -22,10 +18,11 @@
     <link href="./lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .bg-light {
-            background-size: cover; /* Ensure the background image covers the entire div */
-            background-image: url("~/img/v870-tang-36.jpg"); /* Path to your background image */
-            background-repeat: no-repeat; /* Prevent the background image from repeating */
+            background-size: cover;
+            background-image: url('/img/v870-tang-36.jpg');
+            background-repeat: no-repeat; 
         }
+        
     </style>
 </head>
 
@@ -36,9 +33,6 @@
             <p class="lead font-weight-normal">Register as a patient, book an appointment with one of our Doctors</p>
             <a class="btn btn-outline-primary" asp-controller="Booking" asp-action="Index">Register Now</a>
         </div>
-       @*  <img src="~/img/v870-tang-36.jpg" alt="Background Image" class="bg-image"> *@
-     @*    <div class="product-device box-shadow d-none d-md-block"></div>
-        <div class="product-device product-device-2 box-shadow d-none d-md-block"></div> *@
     </div>
 </body>
 
