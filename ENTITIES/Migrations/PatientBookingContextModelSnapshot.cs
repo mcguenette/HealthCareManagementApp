@@ -138,7 +138,7 @@ namespace ENTITIES.Migrations
                     b.HasOne("ENTITIES.Entities.Doctor", "Doctor")
                         .WithMany("Availabilities")
                         .HasForeignKey("DoctorID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Doctor");
@@ -149,19 +149,19 @@ namespace ENTITIES.Migrations
                     b.HasOne("ENTITIES.Entities.Availability", "Availability")
                         .WithMany("Bookings")
                         .HasForeignKey("AvailabilityID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("ENTITIES.Entities.Doctor", "Doctor")
                         .WithMany("Bookings")
                         .HasForeignKey("DoctorID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("ENTITIES.Entities.Patient", "Patient")
                         .WithMany("Bookings")
                         .HasForeignKey("PatientID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Availability");

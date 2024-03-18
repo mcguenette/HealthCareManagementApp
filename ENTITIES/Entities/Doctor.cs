@@ -23,5 +23,6 @@ namespace ENTITIES.Entities
 
         // Navigation property for Bookings
         public ICollection<Booking> Bookings { get; set; }
+        public ICollection<Availability> Availabilities { get; set; }
     }
 }

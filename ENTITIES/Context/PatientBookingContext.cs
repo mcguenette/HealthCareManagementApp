@@ -36,17 +36,20 @@ namespace ENTITIES.Context
             modelBuilder.Entity<Booking>()
                 .HasOne(b => b.Patient)
                 .WithMany(p => p.Bookings)
-                .HasForeignKey(b => b.PatientID);
+                .HasForeignKey(b => b.PatientID)
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Booking>()
                 .HasOne(b => b.Doctor)
-                .WithMany()
-                .HasForeignKey(b => b.DoctorID);
+                .WithMany(d => d.Bookings)
+                .OnDelete(DeleteBehavior.NoAction);// Configure Doctor relationship without cascade behavior
 
-            modelBuilder.Entity<Availability>()
-                .HasOne(a => a.Doctor)
-                .WithMany(d => d.Availabilities)
-                .HasForeignKey(a => a.DoctorID);
+            modelBuilder.Entity<Booking>()
+                .HasOne(b => b.Availability)
+                .WithMany(a => a.Bookings) // Configure Availability relationship without cascade behavior
+                .OnDelete(DeleteBehavior.NoAction);
+            base.OnModelCreating(modelBuilder);
         }
+
     }
 }

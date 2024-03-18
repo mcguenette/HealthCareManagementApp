@@ -39,11 +39,7 @@ namespace DAL
             if (pacToBeUpdated != null)
             {
                 pacToBeUpdated.PatientID = bookingFormData.PatientID;
-                pacToBeUpdated.DoctorID = bookingFormData.DoctorID;
-                //pacToBeUpdated.AvailabilityTime = bookingFormData.AvailabilityTime;
-                //pacToBeUpdated.AvailabilityDate = bookingFormData.AvailabilityDate;
-
-                //Mapper.Map(pac, pacToBeUpdated); Using automapper is only one line
+                // Do not update DoctorID or AvailabilityID here
                 pbc.SaveChanges();
                 return "success";
             }
@@ -73,17 +69,17 @@ namespace DAL
             }
             return response;
         }
-        public List<string> GetAvailableTimes(string doctor)
+        public List<string> GetAvailableTimes(string doctorName)
         {
             try
             {
                 // Example implementation - Replace with actual database query
                 List<Availability> availabilities = pbc.Availabilities
-                    .Where(a => a.DoctorName == doctor)
+                    .Where(a => a.Doctor.DoctorName == doctorName)
                     .ToList();
 
                 // Convert the list of Availability objects to a list of string (available times)
-                List<string> availableTimes = availabilities.Select(a => a.AvailableTime.ToString("HH:mm")).ToList();
+                List<string> availableTimes = availabilities.Select(a => a.AvailabilityTime.ToString("HH:mm")).ToList();
 
                 return availableTimes;
             }
