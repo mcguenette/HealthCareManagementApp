@@ -13,7 +13,7 @@ namespace ENTITIES.Context
         public PatientBookingContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<PatientBookingContext>();
-            optionsBuilder.UseSqlServer(@"Server=(LocalDb)\MSSQLLocalDB;Database=HealthCareManagement;Trusted_Connection=True;TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer(@"Server=(LocalDb)\MSSQLLocalDB;Database=HealthCareManagementDB;Trusted_Connection=True;TrustServerCertificate=True;");
 
             return new PatientBookingContext(optionsBuilder.Options);
         }

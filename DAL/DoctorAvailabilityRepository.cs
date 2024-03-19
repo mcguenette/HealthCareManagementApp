@@ -18,7 +18,7 @@ namespace DAL
         {
             //Create the collections of data
             List<Doctors> doctors = pbc.Doctors.ToList();
-            List<Availability2> availabilities = pbc.Availabilities2.ToList();
+            List<Availabilities> availabilities = pbc.Availabilities.ToList();
             List<DoctorAvailability> doctorAvailabilities = pbc.DoctorAvailability.ToList();
 
             var doctorsAvailabilities = doctors.Select(d => new DoctorAvailabilityVM

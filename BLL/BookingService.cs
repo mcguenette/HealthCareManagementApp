@@ -31,8 +31,7 @@ namespace BLL
                 BookingID = b.BookingID,
                 PatientName = b.Patients.PatientName,
                 DoctorName = b.Doctors.DoctorName,
-                AvailabilityTime = b.Availabilities.AvailabilityTime,
-                AvailabilityDate = b.Availabilities.AvailabilityDate
+                AvailabilityTime = b.Availabilities.AvailabilityTime
                 // Map other properties as needed
             }).ToList();
 

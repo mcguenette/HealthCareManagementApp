@@ -11,9 +11,15 @@ namespace ENTITIES.Entities
     public class DoctorAvailability
     {
         [Key]
+        public int DoctorAvailibilityID { get; set; }
+
+        [ForeignKey("Availabilities")]
         public int AvailabilityID { get; set; }
 
         [ForeignKey("Doctor")]
         public int DoctorID { get; set; }
+        public virtual Doctors Doctors { get; set; }
+
+        public virtual Availabilities Availabilities { get; set;}
     }
 }

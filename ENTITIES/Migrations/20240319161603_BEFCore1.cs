@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ENTITIES.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateEntities2 : Migration
+    public partial class BEFCore1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -49,7 +49,6 @@ namespace ENTITIES.Migrations
                     AvailabilityID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DoctorID = table.Column<int>(type: "int", nullable: false),
-                    AvailabilityDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AvailabilityTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -80,17 +79,46 @@ namespace ENTITIES.Migrations
                         name: "FK_Bookings_Availabilities_AvailabilityID",
                         column: x => x.AvailabilityID,
                         principalTable: "Availabilities",
-                        principalColumn: "AvailabilityID");
+                        principalColumn: "AvailabilityID",
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_Bookings_Doctors_DoctorID",
                         column: x => x.DoctorID,
                         principalTable: "Doctors",
-                        principalColumn: "DoctorID");
+                        principalColumn: "DoctorID",
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_Bookings_Patients_PatientID",
                         column: x => x.PatientID,
                         principalTable: "Patients",
-                        principalColumn: "PatientID");
+                        principalColumn: "PatientID",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DoctorAvailability",
+                columns: table => new
+                {
+                    DoctorAvailibilityID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AvailabilityID = table.Column<int>(type: "int", nullable: false),
+                    DoctorID = table.Column<int>(type: "int", nullable: false),
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DoctorAvailability", x => x.DoctorAvailibilityID);
+                    table.ForeignKey(
+                        name: "FK_DoctorAvailability_Availabilities_AvailabilityID",
+                        column: x => x.AvailabilityID,
+                        principalTable: "Availabilities",
+                        principalColumn: "AvailabilityID",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_DoctorAvailability_Doctors_DoctorID",
+                        column: x => x.DoctorID,
+                        principalTable: "Doctors",
+                        principalColumn: "DoctorID",
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateIndex(
@@ -112,6 +140,16 @@ namespace ENTITIES.Migrations
                 name: "IX_Bookings_PatientID",
                 table: "Bookings",
                 column: "PatientID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DoctorAvailability_AvailabilityID",
+                table: "DoctorAvailability",
+                column: "AvailabilityID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DoctorAvailability_DoctorID",
+                table: "DoctorAvailability",
+                column: "DoctorID");
         }
 
         /// <inheritdoc />
@@ -121,10 +159,13 @@ namespace ENTITIES.Migrations
                 name: "Bookings");
 
             migrationBuilder.DropTable(
-                name: "Availabilities");
+                name: "DoctorAvailability");
 
             migrationBuilder.DropTable(
                 name: "Patients");
+
+            migrationBuilder.DropTable(
+                name: "Availabilities");
 
             migrationBuilder.DropTable(
                 name: "Doctors");

@@ -15,15 +15,17 @@ namespace ENTITIES.Entities
 
         [ForeignKey("Doctor")]
         public int DoctorID { get; set; }
-        
+
         public virtual Doctors Doctors { get; set; } // Navigation property for Doctor
 
-        public DateTime AvailabilityDate { get; set; }
+        //public DateTime AvailabilityDate { get; set; }
 
         public DateTime AvailabilityTime { get; set; }
 
         // Navigation property for Bookings
         //public virtual ICollection<Bookings> Bookings { get; set; }
-    
+
+        public virtual ICollection<DoctorAvailability> DoctorAvailabilities { get; set; }
+
     }
 }

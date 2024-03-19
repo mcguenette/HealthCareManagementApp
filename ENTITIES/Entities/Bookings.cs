@@ -13,12 +13,16 @@ namespace ENTITIES.Entities
         [Key]
         public int BookingID { get; set; }
 
-        [ForeignKey("Patient")]
+        [ForeignKey("Patients")]
         public int PatientID { get; set; }
         public virtual Patients Patients { get; set; }
 
-        // Remove the ForeignKey attribute for Doctor and Availability
+        [ForeignKey("Doctors")]
+        public int DoctorID { get; set; }
         public virtual Doctors Doctors { get; set; }
+
+        [ForeignKey("Availabilities")]
+        public int AvailabilityID { get; set; }
         public virtual Availabilities Availabilities { get; set; }
 
     }
