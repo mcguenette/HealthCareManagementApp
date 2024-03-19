@@ -14,6 +14,14 @@ namespace ENTITIES.Context
         {
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer(@"Server=(LocalDb)\MSSQLLocalDB;Database=HealthCareManagementDB;Trusted_Connection=True;TrustServerCertificate=True;");
+            }
+        }
+
         public DbSet<Bookings> Bookings { get; set; }
         public DbSet<Doctors> Doctors { get; set; }
         public DbSet<Patients> Patients { get; set; }
@@ -23,7 +31,7 @@ namespace ENTITIES.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

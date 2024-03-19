@@ -6,7 +6,7 @@ namespace HealthCareManagementApp.Controllers
 {
     public class DoctorController : Controller
     {
-        DoctorService DoctorService = new DoctorService();
+        DoctorService ds = new DoctorService();
         public IActionResult Index()
         {
             return View();
@@ -15,21 +15,21 @@ namespace HealthCareManagementApp.Controllers
         [HttpGet]
         public IActionResult GetDoctors()
         {
-            var response = DoctorService.GetAllDoctorsService();
+            var response = ds.GetAllDoctorsService();
             return Json(response);
         }
 
         [HttpPost]
         public IActionResult RegisterDoctor([FromBody] Doctors DoctorFormData)
         {
-            var response = DoctorService.AddDoctorService(DoctorFormData);
+            var response = ds.AddDoctorService(DoctorFormData);
             return Json(response);
         }
 
         [HttpGet]
         public IActionResult GetDoctorByID(int id)
         {
-            var docById = DoctorService.GetDoctorByIDService(id);
+            var docById = ds.GetDoctorByIDService(id);
 
             return Json(docById);
         }
@@ -37,7 +37,7 @@ namespace HealthCareManagementApp.Controllers
         [HttpPost]
         public IActionResult UpdateDoctor([FromBody] Doctors DoctorFormData)
         {
-            var DoctorToUpdated = DoctorService.UpdateDoctorService(DoctorFormData);
+            var DoctorToUpdated = ds.UpdateDoctorService(DoctorFormData);
             return Json(DoctorToUpdated);
         }
 
@@ -46,7 +46,7 @@ namespace HealthCareManagementApp.Controllers
         {
             try
             {
-                var response = DoctorService.DeleteDoctorService(patID);
+                var response = ds.DeleteDoctorService(patID);
                 return Json(response);
             }
             catch (Exception ex)
