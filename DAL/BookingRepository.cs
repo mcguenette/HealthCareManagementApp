@@ -1,5 +1,6 @@
 ﻿using ENTITIES.Context;
 using ENTITIES.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,12 +12,14 @@ namespace DAL
     /// <summary>
     /// Repository class for handling booking-related data access logic.
     /// </summary>
+    /// 
     public class BookingRepository
     {
         /// <summary>
         /// The database context instance for accessing booking data.
         /// </summary>
-        private readonly PatientBookingContext pbc;
+
+        PatientBookingContext pbc = new PatientBookingContext();
 
         /// <summary>
         /// Constructor to initialize the repository with the database context.
@@ -30,7 +33,7 @@ namespace DAL
         /// Get all bookings from the database.
         /// </summary>
         /// <returns>A list of all bookings.</returns>
-        public List<Booking> GetAllBookingsRepo()
+        public List<Bookings> GetAllBookingsRepo()
         {
             return pbc.Bookings.ToList();
         }
@@ -40,7 +43,7 @@ namespace DAL
         /// </summary>
         /// <param name="bookingFormData">The booking data to be added.</param>
         /// <returns>A string indicating the operation result (success or error).</returns>
-        public string AddBooking(Booking bookingFormData)
+        public string AddBooking(Bookings bookingFormData)
         {
             if (bookingFormData != null)
             {
@@ -56,7 +59,7 @@ namespace DAL
         /// </summary>
         /// <param name="id">The ID of the booking to retrieve.</param>
         /// <returns>The booking entity if found, otherwise null.</returns>
-        public Booking GetBookingByIDRepo(int id)
+        public Bookings GetBookingByIDRepo(int id)
         {
             return pbc.Bookings.FirstOrDefault(x => x.BookingID == id);
         }
@@ -66,9 +69,9 @@ namespace DAL
         /// </summary>
         /// <param name="bookingFormData">The updated booking data.</param>
         /// <returns>A string indicating the operation result (success or error).</returns>
-        public string UpdateBookingRepo(Booking bookingFormData)
+        public string UpdateBookingRepo(Bookings bookingFormData)
         {
-            Booking pacToBeUpdated = pbc.Bookings.FirstOrDefault(x => x.BookingID == bookingFormData.BookingID);
+            Bookings pacToBeUpdated = pbc.Bookings.FirstOrDefault(x => x.BookingID == bookingFormData.BookingID);
 
             if (pacToBeUpdated != null)
             {
@@ -89,7 +92,7 @@ namespace DAL
             var response = "";
             try
             {
-                Booking pacToBeDeleted = pbc.Bookings.FirstOrDefault(x => x.BookingID == bookID);
+                Bookings pacToBeDeleted = pbc.Bookings.FirstOrDefault(x => x.BookingID == bookID);
                 if (pacToBeDeleted != null)
                 {
                     pbc.Bookings.Remove(pacToBeDeleted);
@@ -117,8 +120,8 @@ namespace DAL
         {
             try
             {
-                List<Availability> availabilities = pbc.Availabilities
-                    .Where(a => a.Doctor.DoctorName == doctorName)
+                List<Availabilities> availabilities = pbc.Availabilities
+                    .Where(a => a.Doctors.DoctorName == doctorName)
                     .ToList();
 
                 List<string> availableTimes = availabilities.Select(a => a.AvailabilityTime.ToString("HH:mm")).ToList();
@@ -139,13 +142,21 @@ namespace DAL
         {
             try
             {
-                var doctors = pbc.Doctors.Select(d => d.DoctorName).ToList();
+                // Ensure that the Doctors table is included in the query to fetch doctor names
+                var doctors = pbc.Doctors.Include(d => d.Bookings).Select(d => d.DoctorName).ToList();
+
+                // Log the number of doctors retrieved
+                Console.WriteLine($"Number of doctors retrieved: {doctors.Count}");
+
                 return doctors;
             }
             catch (Exception ex)
             {
+                // Log the exception
+                Console.WriteLine("Error fetching doctors: " + ex.Message);
                 throw new Exception("Error fetching doctors: " + ex.Message);
             }
         }
+
     }
 }

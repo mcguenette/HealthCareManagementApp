@@ -12,22 +12,22 @@ namespace BLL
     {
         DoctorRepository dr = new DoctorRepository();
 
-        public List<Doctor> GetAllDoctorsService()
+        public List<Doctors> GetAllDoctorsService()
         {
             return dr.GetAllDoctorsRepo();
         }
 
-        public Doctor GetDoctorByIDService(int id)
+        public Doctors GetDoctorByIDService(int id)
         {
             return dr.GetDoctorByIDRepo(id);
         }
 
-        public string AddDoctorService(Doctor DoctorFormData)
+        public string AddDoctorService(Doctors DoctorFormData)
         {
             return dr.AddDoctor(DoctorFormData);
         }
 
-        public string UpdateDoctorService(Doctor DoctorFormData)
+        public string UpdateDoctorService(Doctors DoctorFormData)
         {
             return dr.UpdateDoctorRepo(DoctorFormData);
         }

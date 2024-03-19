@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 
 namespace ENTITIES.Entities
 {
-    public class Booking
+    public class Bookings
     {
         [Key]
         public int BookingID { get; set; }
 
         [ForeignKey("Patient")]
         public int PatientID { get; set; }
-        public virtual Patient Patient { get; set; }
+        public virtual Patients Patients { get; set; }
 
         // Remove the ForeignKey attribute for Doctor and Availability
-        public virtual Doctor Doctor { get; set; }
-        public virtual Availability Availability { get; set; }
+        public virtual Doctors Doctors { get; set; }
+        public virtual Availabilities Availabilities { get; set; }
 
     }
 }

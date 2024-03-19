@@ -20,6 +20,7 @@ namespace BLL
         /// Get all bookings mapped to BookingViewModel
         /// </summary>
         /// <returns>List of BookingViewModel</returns>
+        // In your BookingService class or controller method
         public List<BookingVM> GetAllBookingsService()
         {
             var bookings = br.GetAllBookingsRepo();
@@ -28,22 +29,23 @@ namespace BLL
             var bvm = bookings.Select(b => new BookingVM
             {
                 BookingID = b.BookingID,
-                PatientName = b.Patient.PatientName,
-                DoctorName = b.Doctor.DoctorName,
-                AvailabilityTime = b.Availability.AvailabilityTime,
-                AvailabilityDate = b.Availability.AvailabilityDate
+                PatientName = b.Patients.PatientName,
+                DoctorName = b.Doctors.DoctorName,
+                AvailabilityTime = b.Availabilities.AvailabilityTime,
+                AvailabilityDate = b.Availabilities.AvailabilityDate
                 // Map other properties as needed
             }).ToList();
 
             return bvm;
         }
 
+
         /// <summary>
         /// Get booking by ID
         /// </summary>
         /// <param name="id">Booking ID</param>
         /// <returns>Booking entity</returns>
-        public Booking GetBookingByIDService(int id)
+        public Bookings GetBookingByIDService(int id)
         {
             return br.GetBookingByIDRepo(id);
         }
@@ -53,7 +55,7 @@ namespace BLL
         /// </summary>
         /// <param name="bookingFormData">Booking data</param>
         /// <returns>Success or error message</returns>
-        public string AddBookingService(Booking bookingFormData)
+        public string AddBookingService(Bookings bookingFormData)
         {
             return br.AddBooking(bookingFormData);
         }
@@ -63,7 +65,7 @@ namespace BLL
         /// </summary>
         /// <param name="bookingFormData">Updated booking data</param>
         /// <returns>Success or error message</returns>
-        public string UpdateBookingService(Booking bookingFormData)
+        public string UpdateBookingService(Bookings bookingFormData)
         {
             return br.UpdateBookingRepo(bookingFormData);
         }

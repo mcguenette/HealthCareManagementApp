@@ -20,7 +20,7 @@ namespace HealthCareManagementApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult RegisterPatient([FromBody] Patient patientFormData)
+        public IActionResult RegisterPatient([FromBody] Patients patientFormData)
         {
             var response = patientService.AddPatientService(patientFormData);
             return Json(response);
@@ -35,7 +35,7 @@ namespace HealthCareManagementApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdatePatient([FromBody] Patient patientFormData)
+        public IActionResult UpdatePatient([FromBody] Patients patientFormData)
         {
             var patientToUpdated = patientService.UpdatePatientService(patientFormData);
             return Json(patientToUpdated);

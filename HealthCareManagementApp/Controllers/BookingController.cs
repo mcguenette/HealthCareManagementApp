@@ -40,7 +40,7 @@ namespace HealthCareManagementApp.Controllers
         /// <param name="bookingFormData">Booking data</param>
         /// <returns>JSON response indicating success or error</returns>
         [HttpPost]
-        public IActionResult RegisterBooking([FromBody] Booking bookingFormData)
+        public IActionResult RegisterBooking([FromBody] Bookings bookingFormData)
         {
             var response = bs.AddBookingService(bookingFormData);
             return Json(response);
@@ -52,10 +52,10 @@ namespace HealthCareManagementApp.Controllers
         /// <param name="id">Booking ID</param>
         /// <returns>JSON response with the booking details</returns>
         [HttpGet]
-        public IActionResult GetBookingByID(int id)
+        public IActionResult GetBookingByID(int bookID)
         {
-            var pacById = bs.GetBookingByIDService(id);
-            return Json(pacById);
+            var bookByID = bs.GetBookingByIDService(bookID);
+            return Json(bookByID);
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace HealthCareManagementApp.Controllers
         /// <param name="bookingFormData">Updated booking data</param>
         /// <returns>JSON response indicating success or error</returns>
         [HttpPost]
-        public IActionResult UpdateBooking([FromBody] Booking bookingFormData)
+        public IActionResult UpdateBooking([FromBody] Bookings bookingFormData)
         {
             var patientToUpdated = bs.UpdateBookingService(bookingFormData);
             return Json(patientToUpdated);
@@ -76,11 +76,11 @@ namespace HealthCareManagementApp.Controllers
         /// <param name="patID">Patient ID</param>
         /// <returns>JSON response indicating success or error</returns>
         [HttpPost]
-        public IActionResult DeleteBooking([FromBody] int patID)
+        public IActionResult DeleteBooking([FromBody] int bookingID)
         {
             try
             {
-                var response = bs.DeleteBookingService(patID);
+                var response = bs.DeleteBookingService(bookingID);
                 return Json(response);
             }
             catch (Exception ex)
