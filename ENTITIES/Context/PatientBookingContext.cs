@@ -23,8 +23,8 @@ namespace ENTITIES.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(@"Server=.;Database=HealthCareManagementApp;Trusted_Connection=True;TrustServerCertificate=True;");
-                //optionsBuilder.UseSqlServer(@"Server =.;Database=HealthCareManagementApp;Trusted_Connection=True;MultipleActiveResultSets=true;");
+
+                optionsBuilder.UseSqlServer(@"Server=(LocalDb)\MSSQLLocalDB;Database=HealthCareManagementApp;Trusted_Connection=True;MultipleActiveResultSets=true;");
                 Console.WriteLine("Database connection configured.");
             }
         }
