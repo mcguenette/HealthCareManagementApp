@@ -16,6 +16,6 @@ namespace ENTITIES.Entities
         public DateTime AvailabilityTime { get; set; }
 
         // Navigation property for Bookings
-        public virtual ICollection<Booking> Bookings { get; set; }
+        public virtual ICollection<DoctorAvailability> DoctorAvailabilities { get; set; }
     }
 }

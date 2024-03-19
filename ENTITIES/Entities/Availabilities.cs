@@ -23,7 +23,7 @@ namespace ENTITIES.Entities
         public DateTime AvailabilityTime { get; set; }
 
         // Navigation property for Bookings
-        public virtual ICollection<Bookings> Bookings { get; set; }
+        //public virtual ICollection<Bookings> Bookings { get; set; }
     
     }
 }

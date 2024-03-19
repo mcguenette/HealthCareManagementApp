@@ -4,6 +4,7 @@ using ENTITIES.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ENTITIES.Migrations
 {
     [DbContext(typeof(PatientBookingContext))]
-    partial class PatientBookingContextModelSnapshot : ModelSnapshot
+    [Migration("20240319051437_BEFCore19")]
+    partial class BEFCore19
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -73,6 +76,9 @@ namespace ENTITIES.Migrations
                     b.Property<int>("AvailabilitiesAvailabilityID")
                         .HasColumnType("int");
 
+                    b.Property<int?>("Availability2AvailabilityID")
+                        .HasColumnType("int");
+
                     b.Property<int>("DoctorsDoctorID")
                         .HasColumnType("int");
 
@@ -82,6 +88,8 @@ namespace ENTITIES.Migrations
                     b.HasKey("BookingID");
 
                     b.HasIndex("AvailabilitiesAvailabilityID");
+
+                    b.HasIndex("Availability2AvailabilityID");
 
                     b.HasIndex("DoctorsDoctorID");
 
@@ -98,15 +106,10 @@ namespace ENTITIES.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AvailabilityID"));
 
-                    b.Property<int?>("Availability2AvailabilityID")
-                        .HasColumnType("int");
-
                     b.Property<int>("DoctorID")
                         .HasColumnType("int");
 
                     b.HasKey("AvailabilityID");
-
-                    b.HasIndex("Availability2AvailabilityID");
 
                     b.ToTable("DoctorAvailability");
                 });
@@ -189,6 +192,10 @@ namespace ENTITIES.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("ENTITIES.Entities.Availability2", null)
+                        .WithMany("Bookings")
+                        .HasForeignKey("Availability2AvailabilityID");
+
                     b.HasOne("ENTITIES.Entities.Doctors", "Doctors")
                         .WithMany("Bookings")
                         .HasForeignKey("DoctorsDoctorID")
@@ -208,13 +215,6 @@ namespace ENTITIES.Migrations
                     b.Navigation("Patients");
                 });
 
-            modelBuilder.Entity("ENTITIES.Entities.DoctorAvailability", b =>
-                {
-                    b.HasOne("ENTITIES.Entities.Availability2", null)
-                        .WithMany("DoctorAvailabilities")
-                        .HasForeignKey("Availability2AvailabilityID");
-                });
-
             modelBuilder.Entity("ENTITIES.Entities.Availabilities", b =>
                 {
                     b.Navigation("Bookings");
@@ -222,7 +222,7 @@ namespace ENTITIES.Migrations
 
             modelBuilder.Entity("ENTITIES.Entities.Availability2", b =>
                 {
-                    b.Navigation("DoctorAvailabilities");
+                    b.Navigation("Bookings");
                 });
 
             modelBuilder.Entity("ENTITIES.Entities.Doctors", b =>
