@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ENTITIES.Entities
 {
-    public class Availability
+    public class Availabilities
     {
         [Key]
         public int AvailabilityID { get; set; }
@@ -16,14 +16,14 @@ namespace ENTITIES.Entities
         [ForeignKey("Doctor")]
         public int DoctorID { get; set; }
         
-        public virtual Doctor Doctor { get; set; } // Navigation property for Doctor
+        public virtual Doctors Doctors { get; set; } // Navigation property for Doctor
 
         public DateTime AvailabilityDate { get; set; }
 
         public DateTime AvailabilityTime { get; set; }
 
         // Navigation property for Bookings
-        public virtual ICollection<Booking> Bookings { get; set; }
+        public virtual ICollection<Bookings> Bookings { get; set; }
     
     }
 }

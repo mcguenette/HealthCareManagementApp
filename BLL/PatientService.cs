@@ -7,22 +7,22 @@ namespace BLL
     {
         PatientRepository pr = new PatientRepository();
 
-        public List<Patient> GetAllPatientsService()
+        public List<Patients> GetAllPatientsService()
         {
             return pr.GetAllPatientsRepo();
         }
 
-        public Patient GetPatientByIDService(int id)
+        public Patients GetPatientByIDService(int id)
         {
             return pr.GetPatientByIDRepo(id);
         }
 
-        public string AddPatientService(Patient patientFormData)
+        public string AddPatientService(Patients patientFormData)
         {
             return pr.AddPatient(patientFormData);
         }
 
-        public string UpdatePatientService(Patient patientFormData)
+        public string UpdatePatientService(Patients patientFormData)
         {
             return pr.UpdatePatientRepo(patientFormData);
         }

@@ -23,29 +23,31 @@ namespace ENTITIES.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(@"Server=.;Database=HealthCareManagement;Trusted_Connection=True;TrustServerCertificate=True;");
+                optionsBuilder.UseSqlServer(@"Server=(LocalDb)\MSSQLLocalDB;Database=HealthCareManagementApp;Trusted_Connection=True;MultipleActiveResultSets=true;");
+                Console.WriteLine("Database connection configured.");
             }
         }
-        public DbSet<Booking> Bookings { get; set; }
-        public DbSet<Doctor> Doctors { get; set; }
-        public DbSet<Patient> Patients { get; set; }
-        public DbSet<Availability> Availabilities { get; set; }
+
+        public DbSet<Bookings> Bookings { get; set; }
+        public DbSet<Doctors> Doctors { get; set; }
+        public DbSet<Patients> Patients { get; set; }
+        public DbSet<Availabilities> Availabilities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Booking>()
-                .HasOne(b => b.Patient)
+            modelBuilder.Entity<Bookings>()
+                .HasOne(b => b.Patients)
                 .WithMany(p => p.Bookings)
                 .HasForeignKey(b => b.PatientID)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<Booking>()
-                .HasOne(b => b.Doctor)
+            modelBuilder.Entity<Bookings>()
+                .HasOne(b => b.Doctors)
                 .WithMany(d => d.Bookings)
                 .OnDelete(DeleteBehavior.NoAction);// Configure Doctor relationship without cascade behavior
 
-            modelBuilder.Entity<Booking>()
-                .HasOne(b => b.Availability)
+            modelBuilder.Entity<Bookings>()
+                .HasOne(b => b.Availabilities)
                 .WithMany(a => a.Bookings) // Configure Availability relationship without cascade behavior
                 .OnDelete(DeleteBehavior.NoAction);
             base.OnModelCreating(modelBuilder);

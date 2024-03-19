@@ -7,12 +7,12 @@ namespace DAL
     {
         PatientBookingContext pbc = new PatientBookingContext();
 
-        public List<Patient> GetAllPatientsRepo()
+        public List<Patients> GetAllPatientsRepo()
         {
             return pbc.Patients.ToList();
         }
 
-        public string AddPatient(Patient patientFormData)
+        public string AddPatient(Patients patientFormData)
         {
             if (patientFormData != null)
             {
@@ -22,14 +22,14 @@ namespace DAL
             }
             return "error";
         }
-        public Patient GetPatientByIDRepo(int id)
+        public Patients GetPatientByIDRepo(int id)
         {
             return pbc.Patients.FirstOrDefault(x => x.PatientID == id);
         }
 
-        public string UpdatePatientRepo(Patient patientFormData)
+        public string UpdatePatientRepo(Patients patientFormData)
         {
-            Patient pacToBeUpdated = pbc.Patients.FirstOrDefault(x => x.PatientID == patientFormData.PatientID);
+            Patients pacToBeUpdated = pbc.Patients.FirstOrDefault(x => x.PatientID == patientFormData.PatientID);
 
             if (pacToBeUpdated != null)
             {
@@ -50,7 +50,7 @@ namespace DAL
             var response = "";
             try
             {
-                Patient pacToBeDeleted = pbc.Patients.FirstOrDefault(x => x.PatientID == patID);
+                Patients pacToBeDeleted = pbc.Patients.FirstOrDefault(x => x.PatientID == patID);
                 if (pacToBeDeleted != null)
                 {
                     pbc.Patients.Remove(pacToBeDeleted);

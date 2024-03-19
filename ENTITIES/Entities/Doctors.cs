@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ENTITIES.Entities
 {
-    public class Doctor
+    public class Doctors
     {
         [Key]
         public int DoctorID { get; set; }
@@ -22,7 +22,7 @@ namespace ENTITIES.Entities
         public string DoctorSpecialization { get; set; }
 
         // Navigation property for Bookings
-        public ICollection<Booking> Bookings { get; set; }
-        public ICollection<Availability> Availabilities { get; set; }
+        public ICollection<Bookings> Bookings { get; set; }
+        public ICollection<Availabilities> Availabilities { get; set; }
     }
 }
