@@ -29,6 +29,7 @@ namespace ENTITIES.Context
 
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Availability> Availabilities { get; set; }
+        public DbSet<Availability2> Availabilities2 { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Doctor> Doctors { get; set; }
 

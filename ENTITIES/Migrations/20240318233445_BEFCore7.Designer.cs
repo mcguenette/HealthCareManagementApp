@@ -4,6 +4,7 @@ using ENTITIES.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ENTITIES.Migrations
 {
     [DbContext(typeof(PatientBookingContext))]
-    partial class PatientBookingContextModelSnapshot : ModelSnapshot
+    [Migration("20240318233445_BEFCore7")]
+    partial class BEFCore7
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,22 +49,6 @@ namespace ENTITIES.Migrations
                     b.ToTable("Availabilities");
                 });
 
-            modelBuilder.Entity("ENTITIES.Entities.Availability2", b =>
-                {
-                    b.Property<int>("AvailabilityID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AvailabilityID"));
-
-                    b.Property<DateTime>("AvailabilityTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("AvailabilityID");
-
-                    b.ToTable("Availabilities2");
-                });
-
             modelBuilder.Entity("ENTITIES.Entities.Booking", b =>
                 {
                     b.Property<int>("BookingID")
@@ -69,9 +56,6 @@ namespace ENTITIES.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookingID"));
-
-                    b.Property<int?>("Availability2AvailabilityID")
-                        .HasColumnType("int");
 
                     b.Property<int>("AvailabilityID")
                         .HasColumnType("int");
@@ -83,8 +67,6 @@ namespace ENTITIES.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("BookingID");
-
-                    b.HasIndex("Availability2AvailabilityID");
 
                     b.HasIndex("AvailabilityID");
 
@@ -167,10 +149,6 @@ namespace ENTITIES.Migrations
 
             modelBuilder.Entity("ENTITIES.Entities.Booking", b =>
                 {
-                    b.HasOne("ENTITIES.Entities.Availability2", null)
-                        .WithMany("Bookings")
-                        .HasForeignKey("Availability2AvailabilityID");
-
                     b.HasOne("ENTITIES.Entities.Availability", "Availability")
                         .WithMany("Bookings")
                         .HasForeignKey("AvailabilityID")
@@ -197,11 +175,6 @@ namespace ENTITIES.Migrations
                 });
 
             modelBuilder.Entity("ENTITIES.Entities.Availability", b =>
-                {
-                    b.Navigation("Bookings");
-                });
-
-            modelBuilder.Entity("ENTITIES.Entities.Availability2", b =>
                 {
                     b.Navigation("Bookings");
                 });
