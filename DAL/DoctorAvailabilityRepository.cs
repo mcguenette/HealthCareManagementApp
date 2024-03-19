@@ -13,45 +13,46 @@ namespace DAL
     {
 
         PatientBookingContext pbc = new PatientBookingContext();
+
         public List<DoctorAvailabilityVM> GetAllDoctorsAvailabilitiesRepo()
         {
             //Create the collections of data
-            List<Doctor> doctors = pbc.Doctors.ToList();
-            List<Availability2> availabilities2 = pbc.Availabilities2.ToList();
-            List<Booking> Bookings = pbc.Bookings.ToList();
+            List<Doctors> doctors = pbc.Doctors.ToList();
+            List<Availability2> availabilities = pbc.Availabilities2.ToList();
+            List<DoctorAvailability> doctorAvailabilities = pbc.DoctorAvailability.ToList();
 
-            var doctorsAvailabilities2 = doctors.Select(d => new DoctorAvailabilityVM
+            var doctorsAvailabilities = doctors.Select(d => new DoctorAvailabilityVM
             {
                 DoctorId = d.DoctorID,
                 DoctorName = d.DoctorName,
-                AvailabilityTimes = availabilities2.Select(d => d.AvailabilityTime).ToList(),
-                AvailabilityIds = availabilities2.Select(d => d.AvailabilityID).ToList(),
-                Checked = availabilities2.Select(Availability2 => Bookings.Any(
-                    Booking => Booking.AvailabilityID == Availability2.AvailabilityID && Booking.DoctorID == d.DoctorID)).ToList()
+                AvailabilityTimes = availabilities.Select(d => d.AvailabilityTime).ToList(),
+                AvailabilityIds = availabilities.Select(d => d.AvailabilityID).ToList(),
+                Checked = availabilities.Select(Availability2 => doctorAvailabilities.Any(
+                    da => da.AvailabilityID == Availability2.AvailabilityID && da.DoctorID == d.DoctorID)).ToList()
 
             }).ToList();
-            return doctorsAvailabilities2;
+            return doctorsAvailabilities;
         }
 
 
-        public string UpdateDoctorAvailabilityRepo(Dictionary<int, List<DateTime>> doctorAvailabilities) 
+        public string UpdateDoctorAvailabilityRepo(Dictionary<int, List<int>> doctorAvailabilities) 
         {
-            //Check this.
-            //pbc.Bookings.RemoveRange(pbc.Bookings.ToList());
+            
 
             foreach (var item in doctorAvailabilities)
             {
-
                 int doctorId = item.Key;
+                var daToRemove = pbc.DoctorAvailability.Where(b => b.DoctorID == doctorId).ToList();
+                pbc.DoctorAvailability.RemoveRange(daToRemove);
 
                 foreach (var avaId in item.Value)
                 {
                     var newdoctorAvailability = new DoctorAvailability
                     {
-                        //AvailabilityID = avaId,
+                        AvailabilityID = avaId,
                         DoctorID = doctorId
                     };
-                    //pbc.DoctorAvailability.Add(newdoctorAvailability);
+                    pbc.DoctorAvailability.Add(newdoctorAvailability);
                 }
 
             }

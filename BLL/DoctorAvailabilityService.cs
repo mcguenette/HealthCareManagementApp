@@ -11,12 +11,12 @@ namespace BLL
     public class DoctorAvailabilityService
     {
         DoctorAvailabilityRepository dar = new DoctorAvailabilityRepository();
-        public List<DoctorAvailabilityVM> GetDoctorAvailabilityForBooking()
+        public List<DoctorAvailabilityVM> GetDoctorAvailability()
         {
             return dar.GetAllDoctorsAvailabilitiesRepo();
         }
 
-        public string UpdateDoctorAvailability(Dictionary<int, List<DateTime>> doctorAvailabilities)
+        public string UpdateDoctorAvailability(Dictionary<int, List<int>> doctorAvailabilities)
         {
             return dar.UpdateDoctorAvailabilityRepo(doctorAvailabilities);
         }
