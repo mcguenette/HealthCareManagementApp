@@ -8,15 +8,38 @@ using System.Threading.Tasks;
 
 namespace DAL
 {
+    /// <summary>
+    /// Repository class for handling booking-related data access logic.
+    /// </summary>
     public class BookingRepository
     {
-        PatientBookingContext pbc = new PatientBookingContext();
+        /// <summary>
+        /// The database context instance for accessing booking data.
+        /// </summary>
+        private readonly PatientBookingContext pbc;
 
+        /// <summary>
+        /// Constructor to initialize the repository with the database context.
+        /// </summary>
+        public BookingRepository()
+        {
+            pbc = new PatientBookingContext();
+        }
+
+        /// <summary>
+        /// Get all bookings from the database.
+        /// </summary>
+        /// <returns>A list of all bookings.</returns>
         public List<Booking> GetAllBookingsRepo()
         {
             return pbc.Bookings.ToList();
         }
 
+        /// <summary>
+        /// Add a new booking to the database.
+        /// </summary>
+        /// <param name="bookingFormData">The booking data to be added.</param>
+        /// <returns>A string indicating the operation result (success or error).</returns>
         public string AddBooking(Booking bookingFormData)
         {
             if (bookingFormData != null)
@@ -27,11 +50,22 @@ namespace DAL
             }
             return "error";
         }
+
+        /// <summary>
+        /// Get a booking by its ID from the database.
+        /// </summary>
+        /// <param name="id">The ID of the booking to retrieve.</param>
+        /// <returns>The booking entity if found, otherwise null.</returns>
         public Booking GetBookingByIDRepo(int id)
         {
             return pbc.Bookings.FirstOrDefault(x => x.BookingID == id);
         }
 
+        /// <summary>
+        /// Update an existing booking in the database.
+        /// </summary>
+        /// <param name="bookingFormData">The updated booking data.</param>
+        /// <returns>A string indicating the operation result (success or error).</returns>
         public string UpdateBookingRepo(Booking bookingFormData)
         {
             Booking pacToBeUpdated = pbc.Bookings.FirstOrDefault(x => x.BookingID == bookingFormData.BookingID);
@@ -39,13 +73,17 @@ namespace DAL
             if (pacToBeUpdated != null)
             {
                 pacToBeUpdated.PatientID = bookingFormData.PatientID;
-                // Do not update DoctorID or AvailabilityID here
                 pbc.SaveChanges();
                 return "success";
             }
             return "error";
         }
 
+        /// <summary>
+        /// Delete a booking from the database by its ID.
+        /// </summary>
+        /// <param name="bookID">The ID of the booking to delete.</param>
+        /// <returns>A string indicating the operation result (success or error).</returns>
         public string DeleteBookingRepo(int bookID)
         {
             var response = "";
@@ -69,16 +107,20 @@ namespace DAL
             }
             return response;
         }
-        public List<string> GetAvailableTimes(string doctorName)
+
+        /// <summary>
+        /// Get available times for appointments based on the selected doctor's name.
+        /// </summary>
+        /// <param name="doctorName">The name of the doctor to fetch available times for.</param>
+        /// <returns>A list of available times as strings.</returns>
+        public List<string> GetAvailableTimesRepo(string doctorName)
         {
             try
             {
-                // Example implementation - Replace with actual database query
                 List<Availability> availabilities = pbc.Availabilities
                     .Where(a => a.Doctor.DoctorName == doctorName)
                     .ToList();
 
-                // Convert the list of Availability objects to a list of string (available times)
                 List<string> availableTimes = availabilities.Select(a => a.AvailabilityTime.ToString("HH:mm")).ToList();
 
                 return availableTimes;
@@ -86,6 +128,23 @@ namespace DAL
             catch (Exception ex)
             {
                 throw new Exception("Error fetching available times: " + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Get all doctors' names from the database.
+        /// </summary>
+        /// <returns>A list of all doctors' names.</returns>
+        public List<string> GetDoctorsRepo()
+        {
+            try
+            {
+                var doctors = pbc.Doctors.Select(d => d.DoctorName).ToList();
+                return doctors;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error fetching doctors: " + ex.Message);
             }
         }
     }
