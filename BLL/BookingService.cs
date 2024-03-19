@@ -29,14 +29,16 @@ namespace BLL
             var bvm = bookings.Select(b => new BookingVM
             {
                 BookingID = b.BookingID,
-                PatientName = b.Patients.PatientName,
-                DoctorName = b.Doctors.DoctorName,
-                AvailabilityTime = b.Availabilities.AvailabilityTime
-                // Map other properties as needed
+                PatientName = b.Patients?.PatientName,
+                DoctorName = b.Doctors?.DoctorName,
+                AvailabilityTime = b.Availabilities?.AvailabilityTime, // Nullable DateTime property
+                AvailabilityID = b.Availabilities?.AvailabilityID // Nullable int property
             }).ToList();
 
             return bvm;
         }
+
+
 
 
         /// <summary>
@@ -88,7 +90,14 @@ namespace BLL
         {
             try
             {
-                return br.GetAvailableTimesRepo(doctor);
+                List<Availabilities> availabilities = br.GetAvailableTimesRepo(doctor);
+
+                // Transform Availabilities objects to strings representing availability times
+                List<string> availableTimes = availabilities
+                    .Select(a => a.AvailabilityTime.ToString("HH:mm")) // Assuming AvailabilityTime is a DateTime property
+                    .ToList();
+
+                return availableTimes;
             }
             catch (Exception ex)
             {

@@ -23,12 +23,12 @@ namespace DAL
 
             var doctorsAvailabilities = doctors.Select(d => new DoctorAvailabilityVM
             {
-                DoctorId = d.DoctorID,
+                DoctorID = d.DoctorID,
                 DoctorName = d.DoctorName,
                 AvailabilityTimes = availabilities.Select(d => d.AvailabilityTime).ToList(),
-                AvailabilityIds = availabilities.Select(d => d.AvailabilityID).ToList(),
-                Checked = availabilities.Select(Availability2 => doctorAvailabilities.Any(
-                    da => da.AvailabilityID == Availability2.AvailabilityID && da.DoctorID == d.DoctorID)).ToList()
+                AvailabilityIDs = availabilities.Select(d => d.AvailabilityID).ToList(),
+                Checked = availabilities.Select(Availabilities => doctorAvailabilities.Any(
+                    da => da.AvailabilityID == Availabilities.AvailabilityID && da.DoctorID == d.DoctorID)).ToList()
 
             }).ToList();
             return doctorsAvailabilities;

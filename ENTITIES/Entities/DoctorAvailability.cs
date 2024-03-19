@@ -16,7 +16,6 @@ namespace ENTITIES.Entities
         [ForeignKey("Availabilities")]
         public int AvailabilityID { get; set; }
 
-        [ForeignKey("Doctor")]
         public int DoctorID { get; set; }
         public virtual Doctors Doctors { get; set; }
 

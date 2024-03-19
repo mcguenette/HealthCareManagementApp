@@ -48,7 +48,6 @@
             DoctorSpecialization: $('#doctorSpecialization').val()
         };
 
-        console.log("Object ->" + doctorObj);
         $.ajax({
             url: '/Doctor/RegisterDoctor',
             type: 'POST',
@@ -89,7 +88,7 @@
 
         $.ajax({
             url: "/Doctor/UpdateDoctor/",
-            data: JSON.stringify(docObj),
+            data: JSON.stringify(doctorObj),
             type: "POST",
             contentType: "application/json",
             dataType: "json",
@@ -189,7 +188,7 @@
     }
 </script>
 
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" onclick="clearTextBoxes();">Add New Doctor</button>
+<button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#myModal" onclick="clearTextBoxes();">Add New Doctor</button>
 @*<p style="color:red" id="errorMessage"></p>*@
 
 <br />

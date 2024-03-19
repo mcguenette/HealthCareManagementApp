@@ -57,14 +57,14 @@
                     @foreach (var availabilityIndex in Enumerable.Range(0, doctor.AvailabilityTimes.Count()))
                     {
 
-                        var checkBoxId = $"availabilityCheckBox_{doctor.DoctorId}_{availabilityIndex}";
+                        var checkBoxId = $"availabilityCheckBox_{doctor.DoctorID}_{availabilityIndex}";
                         var timeOfDay = doctor.AvailabilityTimes[availabilityIndex].TimeOfDay;
                         var formattedTime = timeOfDay.ToString("hh\\:mm");
 
                         <input type="checkbox"
                                id="@checkBoxId"
                                name="selectedAvailability"
-                               value="@doctor.AvailabilityIds[availabilityIndex]"
+                               value="@doctor.AvailabilityIDs[availabilityIndex]"
                         @(doctor.Checked[availabilityIndex] ? "checked" : "") />
 
                         <label for="@availabilityIndex">@formattedTime</label>

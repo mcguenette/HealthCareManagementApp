@@ -36,14 +36,11 @@ namespace ENTITIES.Migrations
                     b.Property<int>("DoctorID")
                         .HasColumnType("int");
 
-                    b.Property<int>("DoctorsDoctorID")
-                        .HasColumnType("int");
-
                     b.HasKey("AvailabilityID");
 
-                    b.HasIndex("DoctorsDoctorID");
+                    b.HasIndex("DoctorID");
 
-                    b.ToTable("Availabilities");
+                    b.ToTable("Availabilities", (string)null);
                 });
 
             modelBuilder.Entity("ENTITIES.Entities.Bookings", b =>
@@ -71,7 +68,7 @@ namespace ENTITIES.Migrations
 
                     b.HasIndex("PatientID");
 
-                    b.ToTable("Bookings");
+                    b.ToTable("Bookings", (string)null);
                 });
 
             modelBuilder.Entity("ENTITIES.Entities.DoctorAvailability", b =>
@@ -88,16 +85,13 @@ namespace ENTITIES.Migrations
                     b.Property<int>("DoctorID")
                         .HasColumnType("int");
 
-                    b.Property<int>("DoctorsDoctorID")
-                        .HasColumnType("int");
-
                     b.HasKey("DoctorAvailibilityID");
 
                     b.HasIndex("AvailabilityID");
 
-                    b.HasIndex("DoctorsDoctorID");
+                    b.HasIndex("DoctorID");
 
-                    b.ToTable("DoctorAvailability");
+                    b.ToTable("DoctorAvailability", (string)null);
                 });
 
             modelBuilder.Entity("ENTITIES.Entities.Doctors", b =>
@@ -125,7 +119,7 @@ namespace ENTITIES.Migrations
 
                     b.HasKey("DoctorID");
 
-                    b.ToTable("Doctors");
+                    b.ToTable("Doctors", (string)null);
                 });
 
             modelBuilder.Entity("ENTITIES.Entities.Patients", b =>
@@ -156,14 +150,14 @@ namespace ENTITIES.Migrations
 
                     b.HasKey("PatientID");
 
-                    b.ToTable("Patients");
+                    b.ToTable("Patients", (string)null);
                 });
 
             modelBuilder.Entity("ENTITIES.Entities.Availabilities", b =>
                 {
                     b.HasOne("ENTITIES.Entities.Doctors", "Doctors")
                         .WithMany("Availabilities")
-                        .HasForeignKey("DoctorsDoctorID")
+                        .HasForeignKey("DoctorID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -207,7 +201,7 @@ namespace ENTITIES.Migrations
 
                     b.HasOne("ENTITIES.Entities.Doctors", "Doctors")
                         .WithMany("DoctorAvailabilities")
-                        .HasForeignKey("DoctorsDoctorID")
+                        .HasForeignKey("DoctorID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

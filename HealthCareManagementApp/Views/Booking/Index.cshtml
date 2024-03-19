@@ -29,14 +29,11 @@
                 for (var i = 0; i < response.length; i++) {
                     var item = response[i];
                     var availabilityTime = new Date(item.availabilityTime);
-                    var availabilityDate = new Date(item.availabilityDate);
                     var formatTime = availabilityTime.toLocaleDateString();
-                    var formatDate = availabilityDate.toLocaleDateString();
                     html += '<tr>';
                     html += '<td>' + item.patientName + '</td>';
                     html += '<td>' + item.doctorName + '</td>';
                     html += '<td>' + formatTime + '</td>';
-                    html += '<td>' + formatDate + '</td>';
                     html += '<td><a href="#" id="editLink_' + item.bookingID + '">Edit</a> | <a href="#" id="deleteLink_' + item.bookingID + '">Delete</a></td>';
                     html += '</tr>';
                 }
@@ -68,7 +65,7 @@
             PatientName: $('#patientName').val(),
             DoctorName: $('#doctorName').val(),
             AvailabilityTime: $('#availabilityTime').val(),
-            AvailabilityDate: $('#availabilityDate').val(),
+            AvailabilityID: $('#availabilityID').val()
         };
 
         $.ajax({
@@ -106,7 +103,7 @@
             PatientName: $('#patientName').val(),
             DoctorName: $('#doctorName').val(),
             BookingTime: $('#availabilityTime').val(),
-            BookingDate: $('#availabilityDate').val(),
+            AvailabilityID: $('#availabilityID').val()
         };
 
         $.ajax({
@@ -152,12 +149,12 @@
                 $('#bookID').val(response.bookID);
                 $('#patientName').val(response.patientName);
                 $('#doctorName').val(response.doctorName);
+                $('#availabilityID').val(response.availabilityID);
                 // $('#bookingTime').val(response.bookingTime);
 
                 var formatTime = new Date(response.availabilityTime); // Convert the string to a Date object
-                var formatDate = availabilityDate.toISOString().split('T')[0]; // Format the date to display only the date (without the time)
                 $('#availabilityTime').val(formatTime);
-                $('#availabilityDate').val(formatDate);
+
 
                 $('#myModal').modal('show');
                 $('#btnUpdate').show();
@@ -206,7 +203,7 @@
         $('#patientName').val("");
         $('#doctorName').val("");
         $('#availabilityTime').val("");
-        $('#availabilityDate').val("");
+        $('#availabilityID').val("");
 
         $('#btnUpdate').hide();
         $('#alertSuccess').hide();
@@ -257,22 +254,22 @@
         var dropdown = $('#availabilityTime');
         dropdown.empty();
 
-        $.each(times, function (key, value) {
-            dropdown.append($('<option></option>').attr('value', value).text(value));
+        $.each(times, function (index, time) {
+            dropdown.append($('<option></option>').attr('value', time).text(time));
         });
     }
+
+
 </script>
 
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" onclick="clearTextBoxes();">Book an appointment</button>
-<br />
-<br />
+<button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#myModal" onclick="clearTextBoxes();">Book an appointment</button>
+
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
             <td><center>Patient's Name</center></td>
             <td><center>Doctor's Name</center></td>
             <td><center>Booking Time</center></td>
-            <td><center>Booking Date</center></td>
             <td><center>Action</center></td>
         </tr>
     </thead>
@@ -293,6 +290,7 @@
                 <form>
 
                     <input type="hidden" id="bookingID" />
+                    <input type="hidden" id="availabilityID"/>
 
                     <div class="row justify-content-center">
                         <div class="col-md-6">

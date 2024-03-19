@@ -39,12 +39,12 @@ namespace ENTITIES.Migrations
                     b.Property<int>("DoctorID")
                         .HasColumnType("int");
 
-                    b.Property<int>("DoctorsDoctorID")
-                        .HasColumnType("int");
+                    //b.Property<int>("DoctorsDoctorID")
+                    //    .HasColumnType("int");
 
                     b.HasKey("AvailabilityID");
 
-                    b.HasIndex("DoctorsDoctorID");
+                    b.HasIndex("DoctorID");
 
                     b.ToTable("Availabilities");
                 });
@@ -91,14 +91,12 @@ namespace ENTITIES.Migrations
                     b.Property<int>("DoctorID")
                         .HasColumnType("int");
 
-                    b.Property<int>("DoctorsDoctorID")
-                        .HasColumnType("int");
 
                     b.HasKey("DoctorAvailibilityID");
 
                     b.HasIndex("AvailabilityID");
 
-                    b.HasIndex("DoctorsDoctorID");
+                    b.HasIndex("DoctorID");
 
                     b.ToTable("DoctorAvailability");
                 });
@@ -166,7 +164,7 @@ namespace ENTITIES.Migrations
                 {
                     b.HasOne("ENTITIES.Entities.Doctors", "Doctors")
                         .WithMany("Availabilities")
-                        .HasForeignKey("DoctorsDoctorID")
+                        .HasForeignKey("DoctorID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -210,7 +208,7 @@ namespace ENTITIES.Migrations
 
                     b.HasOne("ENTITIES.Entities.Doctors", "Doctors")
                         .WithMany("DoctorAvailabilities")
-                        .HasForeignKey("DoctorsDoctorID")
+                        .HasForeignKey("DoctorID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

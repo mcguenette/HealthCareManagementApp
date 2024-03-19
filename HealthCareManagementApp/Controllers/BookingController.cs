@@ -73,7 +73,7 @@ namespace HealthCareManagementApp.Controllers
         /// <summary>
         /// API endpoint to delete a booking
         /// </summary>
-        /// <param name="patID">Patient ID</param>
+        /// <param name="bookingID">Booking ID</param>
         /// <returns>JSON response indicating success or error</returns>
         [HttpPost]
         public IActionResult DeleteBooking([FromBody] int bookingID)

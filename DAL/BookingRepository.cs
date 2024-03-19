@@ -71,11 +71,11 @@ namespace DAL
         /// <returns>A string indicating the operation result (success or error).</returns>
         public string UpdateBookingRepo(Bookings bookingFormData)
         {
-            Bookings pacToBeUpdated = pbc.Bookings.FirstOrDefault(x => x.BookingID == bookingFormData.BookingID);
+            Bookings bookToBeUpdated = pbc.Bookings.FirstOrDefault(x => x.BookingID == bookingFormData.BookingID);
 
-            if (pacToBeUpdated != null)
+            if (bookToBeUpdated != null)
             {
-                pacToBeUpdated.PatientID = bookingFormData.PatientID;
+                bookToBeUpdated.BookingID = bookingFormData.BookingID;
                 pbc.SaveChanges();
                 return "success";
             }
@@ -92,10 +92,10 @@ namespace DAL
             var response = "";
             try
             {
-                Bookings pacToBeDeleted = pbc.Bookings.FirstOrDefault(x => x.BookingID == bookID);
-                if (pacToBeDeleted != null)
+                Bookings bookToBeDeleted = pbc.Bookings.FirstOrDefault(x => x.BookingID == bookID);
+                if (bookToBeDeleted != null)
                 {
-                    pbc.Bookings.Remove(pacToBeDeleted);
+                    pbc.Bookings.Remove(bookToBeDeleted);
                     pbc.SaveChanges();
                     response = "success";
                 }
@@ -116,23 +116,23 @@ namespace DAL
         /// </summary>
         /// <param name="doctorName">The name of the doctor to fetch available times for.</param>
         /// <returns>A list of available times as strings.</returns>
-        public List<string> GetAvailableTimesRepo(string doctorName)
+        public List<Availabilities> GetAvailableTimesRepo(string doctorName)
         {
             try
             {
                 List<Availabilities> availabilities = pbc.Availabilities
+                    .Include(a => a.Doctors) // Include Doctors navigation property
                     .Where(a => a.Doctors.DoctorName == doctorName)
                     .ToList();
 
-                List<string> availableTimes = availabilities.Select(a => a.AvailabilityTime.ToString("HH:mm")).ToList();
-
-                return availableTimes;
+                return availabilities;
             }
             catch (Exception ex)
             {
                 throw new Exception("Error fetching available times: " + ex.Message);
             }
         }
+
 
         /// <summary>
         /// Get all doctors' names from the database.

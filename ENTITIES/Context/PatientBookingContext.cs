@@ -29,9 +29,21 @@ namespace ENTITIES.Context
         //public DbSet<Availability2> Availabilities2 { get; set; }
         public DbSet<DoctorAvailability> DoctorAvailability { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder mb)
         {
-            base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(mb);
+
+            mb.Entity<DoctorAvailability>()
+                .HasOne(da => da.Doctors)
+                .WithMany(d => d.DoctorAvailabilities)
+                .IsRequired()
+                .HasForeignKey(da => da.DoctorID);
+
+            mb.Entity<Availabilities>()
+                .HasOne(a => a.Doctors)
+                .WithMany(d => d.Availabilities)
+                .IsRequired()
+                .HasForeignKey(a => a.DoctorID);
         }
     }
 }

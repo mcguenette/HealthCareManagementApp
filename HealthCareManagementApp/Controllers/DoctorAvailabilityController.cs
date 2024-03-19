@@ -9,7 +9,7 @@ namespace HealthCareManagementApp.Controllers
         DoctorAvailabilityService das = new DoctorAvailabilityService();
         public IActionResult Index()
         {
-            var response = das.GetDoctorAvailabilityForBooking();
+            var response = das.GetDoctorAvailability();
             return View(response);
         }
 
