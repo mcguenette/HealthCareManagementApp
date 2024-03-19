@@ -2,7 +2,7 @@
 
 namespace ENTITIES.Entities
 {
-    public class Patient
+    public class Patients
     {
         [Key]
         public int PatientID { get; set; }
@@ -16,6 +16,6 @@ namespace ENTITIES.Entities
         [MaxLength(50)]
         public string PhoneNumber { get; set; }
         public DateTime DOB { get; set; }
-        public ICollection<Booking> Bookings { get; set; }
+        public ICollection<Bookings> Bookings { get; set; }
     }
 }

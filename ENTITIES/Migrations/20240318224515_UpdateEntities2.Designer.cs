@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ENTITIES.Migrations
 {
     [DbContext(typeof(PatientBookingContext))]
-    [Migration("20240318144817_BEFCore2")]
-    partial class BEFCore2
+    [Migration("20240318224515_UpdateEntities2")]
+    partial class UpdateEntities2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,9 +33,11 @@ namespace ENTITIES.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AvailabilityID"));
 
-                    b.Property<string>("AvailabilityTime")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("AvailabilityDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("AvailabilityTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("DoctorID")
                         .HasColumnType("int");
@@ -57,9 +59,6 @@ namespace ENTITIES.Migrations
 
                     b.Property<int>("AvailabilityID")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("BookingDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<int>("DoctorID")
                         .HasColumnType("int");
@@ -103,7 +102,7 @@ namespace ENTITIES.Migrations
 
                     b.HasKey("DoctorID");
 
-                    b.ToTable("Doctor");
+                    b.ToTable("Doctors");
                 });
 
             modelBuilder.Entity("ENTITIES.Entities.Patient", b =>
@@ -142,7 +141,7 @@ namespace ENTITIES.Migrations
                     b.HasOne("ENTITIES.Entities.Doctor", "Doctor")
                         .WithMany("Availabilities")
                         .HasForeignKey("DoctorID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Doctor");
@@ -153,19 +152,19 @@ namespace ENTITIES.Migrations
                     b.HasOne("ENTITIES.Entities.Availability", "Availability")
                         .WithMany("Bookings")
                         .HasForeignKey("AvailabilityID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("ENTITIES.Entities.Doctor", "Doctor")
                         .WithMany("Bookings")
                         .HasForeignKey("DoctorID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("ENTITIES.Entities.Patient", "Patient")
                         .WithMany("Bookings")
                         .HasForeignKey("PatientID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Availability");

@@ -13,12 +13,12 @@ namespace DAL
 
         PatientBookingContext pbc = new PatientBookingContext();
 
-        public List<Doctor> GetAllDoctorsRepo()
+        public List<Doctors> GetAllDoctorsRepo()
         {
             return pbc.Doctors.ToList();
         }
 
-        public string AddDoctor(Doctor doctorFormData)
+        public string AddDoctor(Doctors doctorFormData)
         {
             if (doctorFormData != null)
             {
@@ -28,14 +28,14 @@ namespace DAL
             }
             return "error";
         }
-        public Doctor GetDoctorByIDRepo(int id)
+        public Doctors GetDoctorByIDRepo(int id)
         {
             return pbc.Doctors.FirstOrDefault(x => x.DoctorID == id);
         }
 
-        public string UpdateDoctorRepo(Doctor doctorFormData)
+        public string UpdateDoctorRepo(Doctors doctorFormData)
         {
-            Doctor docToBeUpdated = pbc.Doctors.FirstOrDefault(x => x.DoctorID == doctorFormData.DoctorID);
+            Doctors docToBeUpdated = pbc.Doctors.FirstOrDefault(x => x.DoctorID == doctorFormData.DoctorID);
 
             if (docToBeUpdated != null)
             {
@@ -54,7 +54,7 @@ namespace DAL
             var response = "";
             try
             {
-                Doctor docToBeDeleted = pbc.Doctors.FirstOrDefault(x => x.DoctorID == docID);
+                Doctors docToBeDeleted = pbc.Doctors.FirstOrDefault(x => x.DoctorID == docID);
                 if (docToBeDeleted != null)
                 {
                     pbc.Doctors.Remove(docToBeDeleted);

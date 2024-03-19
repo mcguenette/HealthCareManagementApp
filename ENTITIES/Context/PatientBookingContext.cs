@@ -23,43 +23,44 @@ namespace ENTITIES.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(@"Server=.;Database=HealthCareManagement;Trusted_Connection=True;TrustServerCertificate=True;");
+                optionsBuilder.UseSqlServer(@"Server=(LocalDb)\MSSQLLocalDB;Database=HealthCareManagementApp;Trusted_Connection=True;MultipleActiveResultSets=true;");
+                Console.WriteLine("Database connection configured.");
             }
         }
 
-        public DbSet<Patient> Patients { get; set; }
-        public DbSet<Availability> Availabilities { get; set; }
+        
+        public DbSet<Bookings> Bookings { get; set; }
+        public DbSet<Doctors> Doctors { get; set; }
+        public DbSet<Patients> Patients { get; set; }
+        public DbSet<Availabilities> Availabilities { get; set; }
         public DbSet<Availability2> Availabilities2 { get; set; }
-        public DbSet<Booking> Bookings { get; set; }
-        public DbSet<Doctor> Doctors { get; set; }
+        public DbSet<DoctorAvailability> DoctorAvailability { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<Booking>()
-                .HasOne(b => b.Patient)
+            modelBuilder.Entity<Bookings>()
+                .HasOne(b => b.Patients)
                 .WithMany(p => p.Bookings)
                 .HasForeignKey(b => b.PatientID)
-                .OnDelete(DeleteBehavior.Restrict); // Specify the desired delete behavior
+                .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<Booking>()
-                .HasOne(b => b.Doctor)
+            modelBuilder.Entity<Bookings>()
+                .HasOne(b => b.Doctors)
                 .WithMany(d => d.Bookings)
-                .HasForeignKey(b => b.DoctorID)
-                .OnDelete(DeleteBehavior.Restrict); // Specify the desired delete behavior
+                .OnDelete(DeleteBehavior.NoAction);// Configure Doctor relationship without cascade behavior
 
-            modelBuilder.Entity<Booking>()
-                .HasOne(b => b.Availability)
-                .WithMany(a => a.Bookings)
-                .HasForeignKey(b => b.AvailabilityID)
-                .OnDelete(DeleteBehavior.Restrict); // Specify the desired delete behavior
-
-            modelBuilder.Entity<Availability>()
-                .HasOne(a => a.Doctor)
+            modelBuilder.Entity<Bookings>()
+                .HasOne(b => b.Availabilities)
+                .WithMany(a => a.Bookings) // Configure Availability relationship without cascade behavior
+                .OnDelete(DeleteBehavior.NoAction);
+            
+             modelBuilder.Entity<Availabilities>()
+                .HasOne(a => a.Doctors)
                 .WithMany(d => d.Availabilities)
                 .HasForeignKey(a => a.DoctorID)
-                .OnDelete(DeleteBehavior.Restrict); // Specify the desired delete behavior
+                .OnDelete(DeleteBehavior.NoAction);
+            base.OnModelCreating(modelBuilder);
         }
 
     }

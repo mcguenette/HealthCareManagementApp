@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ENTITIES.Migrations
 {
     [DbContext(typeof(PatientBookingContext))]
-    [Migration("20240318042140_HCEFCore1")]
-    partial class HCEFCore1
+    [Migration("20240319015709_newDB")]
+    partial class newDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace ENTITIES.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ENTITIES.Entities.Availability", b =>
+            modelBuilder.Entity("ENTITIES.Entities.Availabilities", b =>
                 {
                     b.Property<int>("AvailabilityID")
                         .ValueGeneratedOnAdd()
@@ -33,21 +33,26 @@ namespace ENTITIES.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AvailabilityID"));
 
-                    b.Property<string>("AvailabilityTime")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("AvailabilityDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("AvailabilityTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("DoctorID")
                         .HasColumnType("int");
 
+                    b.Property<int>("DoctorsDoctorID")
+                        .HasColumnType("int");
+
                     b.HasKey("AvailabilityID");
 
-                    b.HasIndex("DoctorID");
+                    b.HasIndex("DoctorsDoctorID");
 
                     b.ToTable("Availabilities");
                 });
 
-            modelBuilder.Entity("ENTITIES.Entities.Booking", b =>
+            modelBuilder.Entity("ENTITIES.Entities.Bookings", b =>
                 {
                     b.Property<int>("BookingID")
                         .ValueGeneratedOnAdd()
@@ -55,13 +60,10 @@ namespace ENTITIES.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookingID"));
 
-                    b.Property<int>("AvailabilityID")
+                    b.Property<int>("AvailabilitiesAvailabilityID")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("BookingDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("DoctorID")
+                    b.Property<int>("DoctorsDoctorID")
                         .HasColumnType("int");
 
                     b.Property<int>("PatientID")
@@ -69,16 +71,16 @@ namespace ENTITIES.Migrations
 
                     b.HasKey("BookingID");
 
-                    b.HasIndex("AvailabilityID");
+                    b.HasIndex("AvailabilitiesAvailabilityID");
 
-                    b.HasIndex("DoctorID");
+                    b.HasIndex("DoctorsDoctorID");
 
                     b.HasIndex("PatientID");
 
                     b.ToTable("Bookings");
                 });
 
-            modelBuilder.Entity("ENTITIES.Entities.Doctor", b =>
+            modelBuilder.Entity("ENTITIES.Entities.Doctors", b =>
                 {
                     b.Property<int>("DoctorID")
                         .ValueGeneratedOnAdd()
@@ -103,10 +105,10 @@ namespace ENTITIES.Migrations
 
                     b.HasKey("DoctorID");
 
-                    b.ToTable("Doctor");
+                    b.ToTable("Doctors");
                 });
 
-            modelBuilder.Entity("ENTITIES.Entities.Patient", b =>
+            modelBuilder.Entity("ENTITIES.Entities.Patients", b =>
                 {
                     b.Property<int>("PatientID")
                         .ValueGeneratedOnAdd()
@@ -137,57 +139,57 @@ namespace ENTITIES.Migrations
                     b.ToTable("Patients");
                 });
 
-            modelBuilder.Entity("ENTITIES.Entities.Availability", b =>
+            modelBuilder.Entity("ENTITIES.Entities.Availabilities", b =>
                 {
-                    b.HasOne("ENTITIES.Entities.Doctor", "Doctor")
+                    b.HasOne("ENTITIES.Entities.Doctors", "Doctors")
                         .WithMany("Availabilities")
-                        .HasForeignKey("DoctorID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("DoctorsDoctorID")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Doctor");
+                    b.Navigation("Doctors");
                 });
 
-            modelBuilder.Entity("ENTITIES.Entities.Booking", b =>
+            modelBuilder.Entity("ENTITIES.Entities.Bookings", b =>
                 {
-                    b.HasOne("ENTITIES.Entities.Availability", "Availability")
+                    b.HasOne("ENTITIES.Entities.Availabilities", "Availabilities")
                         .WithMany("Bookings")
-                        .HasForeignKey("AvailabilityID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("AvailabilitiesAvailabilityID")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("ENTITIES.Entities.Doctor", "Doctor")
+                    b.HasOne("ENTITIES.Entities.Doctors", "Doctors")
                         .WithMany("Bookings")
-                        .HasForeignKey("DoctorID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("DoctorsDoctorID")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("ENTITIES.Entities.Patient", "Patient")
+                    b.HasOne("ENTITIES.Entities.Patients", "Patients")
                         .WithMany("Bookings")
                         .HasForeignKey("PatientID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("Availability");
+                    b.Navigation("Availabilities");
 
-                    b.Navigation("Doctor");
+                    b.Navigation("Doctors");
 
-                    b.Navigation("Patient");
+                    b.Navigation("Patients");
                 });
 
-            modelBuilder.Entity("ENTITIES.Entities.Availability", b =>
+            modelBuilder.Entity("ENTITIES.Entities.Availabilities", b =>
                 {
                     b.Navigation("Bookings");
                 });
 
-            modelBuilder.Entity("ENTITIES.Entities.Doctor", b =>
+            modelBuilder.Entity("ENTITIES.Entities.Doctors", b =>
                 {
                     b.Navigation("Availabilities");
 
                     b.Navigation("Bookings");
                 });
 
-            modelBuilder.Entity("ENTITIES.Entities.Patient", b =>
+            modelBuilder.Entity("ENTITIES.Entities.Patients", b =>
                 {
                     b.Navigation("Bookings");
                 });

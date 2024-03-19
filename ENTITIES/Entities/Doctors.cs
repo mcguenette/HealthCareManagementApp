@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ENTITIES.Entities
 {
-    public class Doctor
+    public class Doctors
     {
         [Key]
         public int DoctorID { get; set; }
@@ -21,10 +21,8 @@ namespace ENTITIES.Entities
         [MaxLength(50)]
         public string DoctorSpecialization { get; set; }
 
-        // multiple booking with one Doctor - Navigation Property
-        public ICollection<Booking> Bookings { get; set; }
-
-        // multiple Availability with one doctor - Navigation Property
-        public ICollection<Availability> Availabilities { get; set; }
+        // Navigation property for Bookings
+        public ICollection<Bookings> Bookings { get; set; }
+        public ICollection<Availabilities> Availabilities { get; set; }
     }
 }
