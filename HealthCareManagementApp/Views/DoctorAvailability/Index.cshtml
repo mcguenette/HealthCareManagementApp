@@ -1,0 +1,86 @@
+﻿@model List<ENTITIES.ViewModels.DoctorAvailabilityVM>
+
+<center><h3>Doctor Availability</h3></center>
+
+<script type="text/javascript">
+    functionUpdateDoctorAvailability()
+    {
+        var doctorAvailabilityObj = {};
+
+        $('input[name="selectedCourse"]:checked').each(function () {
+            var doctorId = parseInt($(this).attr('id').split('_')[1]);
+            var availabilityId = parseInt($(this).val());
+
+            if (!doctorAvailabilityObj[doctorId]) {
+                doctorAvailabilityOb[doctorId] = [];
+            }
+
+            doctorAvailabilityOb[doctorId].push(availabilityId);
+
+        console.log(doctorAvailabilityObj);
+
+    $.ajax({
+            url: '/DoctorAvailability/UpdateDoctorAvailability',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(doctorAvailabilityObj),
+            success: function (response) {
+            },
+            error: function (errormessage) {
+
+            },
+
+    });
+    
+    }
+</script>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <td>
+                Doctor Name
+            </td>
+            <td>
+                Availability
+            </td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var doctor in Model)
+        {
+            <tr>
+                <td>
+                    @doctor.DoctorName
+                </td>
+                <td>
+                    @foreach (var availabilityIndex in Enumerable.Range(0, doctor.AvailabilityTimes.Count()))
+                    {
+
+                        var checkBoxId = $"availabilityCheckBox_{doctor.DoctorId}_{availabilityIndex}";
+                        var timeOfDay = doctor.AvailabilityTimes[availabilityIndex].TimeOfDay;
+                        var formattedTime = timeOfDay.ToString("hh\\:mm");
+
+                        <input type="checkbox"
+                               id="@checkBoxId"
+                               name="selectedAvailability"
+                               value="@doctor.AvailabilityIds[availabilityIndex]"
+                        @(doctor.Checked[availabilityIndex] ? "checked" : "") />
+
+                        <label for="@availabilityIndex">@formattedTime</label>
+                        <span>|</span>
+                    }
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="form-group">
+            <button type="button" class="btn btn-primary" id="btnSave" onclick="UpdateDoctorAvailability();">Save</button>
+        </div>
+    </div>
+</div>

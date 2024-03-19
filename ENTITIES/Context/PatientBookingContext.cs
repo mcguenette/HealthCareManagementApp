@@ -28,10 +28,14 @@ namespace ENTITIES.Context
             }
         }
 
+        
         public DbSet<Bookings> Bookings { get; set; }
         public DbSet<Doctors> Doctors { get; set; }
         public DbSet<Patients> Patients { get; set; }
         public DbSet<Availabilities> Availabilities { get; set; }
+        public DbSet<Availability2> Availabilities2 { get; set; }
+        public DbSet<DoctorAvailability> DoctorAvailability { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -49,6 +53,12 @@ namespace ENTITIES.Context
             modelBuilder.Entity<Bookings>()
                 .HasOne(b => b.Availabilities)
                 .WithMany(a => a.Bookings) // Configure Availability relationship without cascade behavior
+                .OnDelete(DeleteBehavior.NoAction);
+            
+             modelBuilder.Entity<Availabilities>()
+                .HasOne(a => a.Doctors)
+                .WithMany(d => d.Availabilities)
+                .HasForeignKey(a => a.DoctorID)
                 .OnDelete(DeleteBehavior.NoAction);
             base.OnModelCreating(modelBuilder);
         }
